@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BakeryController;
+use App\Http\Controllers\CepController;
 
 // Rota para exibir a lista de confeitarias
 Route::get('/bakeries', [BakeryController::class, 'index'])->name('bakeries.index');
@@ -20,6 +21,9 @@ Route::put('/bakeries/{bakery}', [BakeryController::class, 'update'])->name('bak
 // Rota para excluir uma confeitaria
 Route::delete('/bakeries/{bakery}', [BakeryController::class, 'destroy'])->name('bakeries.destroy');
 
+
+// Rota para buscar dados do CEP usando a API ViaCEP
+Route::get('/buscar-cep/{cep}', [CepController::class, 'buscar'])->name('cep.buscar');
 
 
 

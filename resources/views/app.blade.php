@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confeitaria</title>
-    @vite('resources/js/app.js') <!-- Verifique se este caminho está correto -->
+    <title>{{ config('app.name') }}</title>
+    @vite('resources/js/app.js')
 </head>
 <body>
     @inertia
