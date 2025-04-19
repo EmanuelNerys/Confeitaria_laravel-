@@ -13,12 +13,11 @@
     <!-- Formulário de cadastro -->
     <form @submit.prevent="submit">
       <input 
-        v-model="form.name" 
+        v-model="form.nome" 
         placeholder="Nome" 
-        :class="{'is-invalid': form.errors.name}" 
+        :class="{'is-invalid': form.errors.nome}" 
       />
 
-      <!-- Campo de CEP com busca automática -->
       <input 
         v-model="form.cep" 
         placeholder="CEP" 
@@ -27,34 +26,34 @@
       />
 
       <input 
-        v-model="form.street" 
+        v-model="form.rua" 
         placeholder="Rua" 
-        :class="{'is-invalid': form.errors.street}" 
+        :class="{'is-invalid': form.errors.rua}" 
       />
       <input 
-        v-model="form.number" 
+        v-model="form.numero" 
         placeholder="Número" 
-        :class="{'is-invalid': form.errors.number}" 
+        :class="{'is-invalid': form.errors.numero}" 
       />
       <input 
-        v-model="form.neighborhood" 
+        v-model="form.bairro" 
         placeholder="Bairro" 
-        :class="{'is-invalid': form.errors.neighborhood}" 
+        :class="{'is-invalid': form.errors.bairro}" 
       />
       <input 
-        v-model="form.city" 
+        v-model="form.cidade" 
         placeholder="Cidade" 
-        :class="{'is-invalid': form.errors.city}" 
+        :class="{'is-invalid': form.errors.cidade}" 
       />
       <input 
-        v-model="form.state" 
+        v-model="form.estado" 
         placeholder="Estado" 
-        :class="{'is-invalid': form.errors.state}" 
+        :class="{'is-invalid': form.errors.estado}" 
       />
       <input 
-        v-model="form.phone" 
+        v-model="form.telefone" 
         placeholder="Telefone" 
-        :class="{'is-invalid': form.errors.phone}" 
+        :class="{'is-invalid': form.errors.telefone}" 
       />
       <input 
         v-model="form.latitude" 
@@ -82,19 +81,18 @@ import { usePage } from '@inertiajs/inertia-vue3'
 const { flash } = usePage().props
 
 const form = useForm({
-  name: '',
+  nome: '',
   cep: '',
-  street: '',
-  number: '',
-  neighborhood: '',
-  city: '',
-  state: '',
-  phone: '',
+  rua: '',
+  numero: '',
+  bairro: '',
+  cidade: '',
+  estado: '',
+  telefone: '',
   latitude: '',
   longitude: '',
 })
 
-// Função de submit
 function submit() {
   form.post('/bakeries', {
     onSuccess: () => {
@@ -106,23 +104,20 @@ function submit() {
   })
 }
 
-// Função de busca do CEP usando a rota do Laravel
 async function buscarCep() {
-  const cep = form.cep.replace(/\D/g, '') // Remove qualquer caractere não numérico
+  const cep = form.cep.replace(/\D/g, '')
 
-  if (cep.length !== 8) return // Se o CEP não tiver 8 dígitos, não faz a busca
+  if (cep.length !== 8) return
 
   try {
-    // Faz a chamada à rota do Laravel que retorna os dados do CEP
     const response = await fetch(`/buscar-cep/${cep}`)
     if (!response.ok) throw new Error('CEP não encontrado')
     const data = await response.json()
 
-    // Preenche os campos do formulário com os dados retornados pela API
-    form.street = data.logradouro || ''
-    form.neighborhood = data.bairro || ''
-    form.city = data.localidade || ''
-    form.state = data.uf || ''
+    form.rua = data.logradouro || ''
+    form.bairro = data.bairro || ''
+    form.cidade = data.localidade || ''
+    form.estado = data.uf || ''
   } catch (error) {
     console.error('Erro ao buscar CEP:', error)
     flash.error = 'CEP inválido ou não encontrado.'

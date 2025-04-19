@@ -11,9 +11,13 @@ class BakeryController extends Controller
     // Exibição da lista de confeitarias
     public function index()
     {
-        $bakeries = Bakery::with('products')->get(); // Carrega as confeitarias com seus produtos
+        // Recupera todas as confeitarias com seus produtos associados
+        $bakeries = Bakery::with('products')->get();
+
+        // Retorna os dados para a página Vue.js via Inertia, incluindo a mensagem flash
         return Inertia::render('Bakeries/Index', [
-            'bakeries' => $bakeries // Envia as confeitarias para o frontend
+            'bakeries' => $bakeries,
+            'flash' => session('flash') // Passando flash de sessão, caso haja
         ]);
     }
 
@@ -28,64 +32,63 @@ class BakeryController extends Controller
     {
         // Valida os dados antes de salvar no banco
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'nome' => 'required|string|max:255',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'cep' => 'required|string|max:10',
-            'street' => 'required|string|max:255',
-            'number' => 'required|string|max:10',
-            'neighborhood' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
+            'rua' => 'required|string|max:255',
+            'numero' => 'required|string|max:10',
+            'bairro' => 'required|string|max:255',
+            'cidade' => 'required|string|max:255',
+            'estado' => 'required|string|max:255',
+            'telefone' => 'required|string|max:15',
         ]);
 
-        // Cria a nova confeitaria no banco
         Bakery::create($data);
 
-        // Retorna para a lista de confeitarias após salvar
-        return redirect()->route('bakeries.index')->with('success', 'Confeitaria cadastrada!');
+        // Redireciona para a página de listagem com mensagem de sucesso
+        return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria cadastrada com sucesso!']);
     }
 
-    // Exibição do formulário de edição de uma confeitaria
+    // Exibição do formulário de edição
     public function edit(Bakery $bakery)
     {
         return Inertia::render('Bakeries/Edit', [
-            'bakery' => $bakery // Envia os dados da confeitaria para a página de edição
+            'bakery' => $bakery
         ]);
     }
 
-    // Atualização de uma confeitaria existente
+    // Atualização de uma confeitaria
     public function update(Request $request, Bakery $bakery)
     {
-        // Valida os dados antes de atualizar
+        // Validação dos dados para atualização
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'nome' => 'required|string|max:255',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'cep' => 'required|string|max:10',
-            'street' => 'required|string|max:255',
-            'number' => 'required|string|max:10',
-            'neighborhood' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
+            'rua' => 'required|string|max:255',
+            'numero' => 'required|string|max:10',
+            'bairro' => 'required|string|max:255',
+            'cidade' => 'required|string|max:255',
+            'estado' => 'required|string|max:255',
+            'telefone' => 'required|string|max:15',
         ]);
 
-        // Atualiza a confeitaria com os dados validados
+        // Atualiza a confeitaria com os novos dados
         $bakery->update($data);
 
-        // Retorna para a lista de confeitarias após a atualização
-        return redirect()->route('bakeries.index')->with('success', 'Confeitaria atualizada!');
+        // Redireciona para a página de listagem com mensagem de sucesso
+        return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria atualizada com sucesso!']);
     }
 
     // Exclusão de uma confeitaria
     public function destroy(Bakery $bakery)
     {
-        // Deleta a confeitaria
         $bakery->delete();
 
-        // Retorna para a lista de confeitarias após a exclusão
-        return redirect()->route('bakeries.index')->with('success', 'Confeitaria excluída!');
+        // Redireciona para a página de listagem com mensagem de sucesso
+        return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria excluída com sucesso!']);
     }
 }
+

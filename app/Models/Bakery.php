@@ -11,16 +11,16 @@ class Bakery extends Model
 
     // Campos que podem ser preenchidos em massa (mass assignment)
     protected $fillable = [
-        'name',
+        'nome',        // Alterei de 'name' para 'nome'
         'latitude',
         'longitude',
         'cep',
-        'street',
-        'number',
-        'neighborhood',
-        'city',
-        'state',
-        'phone',
+        'rua',         // Alterei de 'street' para 'rua'
+        'numero',      // Alterei de 'number' para 'numero'
+        'bairro',      // Alterei de 'neighborhood' para 'bairro'
+        'cidade',      // Alterei de 'city' para 'cidade'
+        'estado',      // Alterei de 'state' para 'estado'
+        'telefone',    // Alterei de 'phone' para 'telefone'
     ];
 
     // Relacionamento: Uma confeitaria pode ter muitos produtos
