@@ -14,7 +14,7 @@ createInertiaApp({
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`, // Caminho das páginas Vue (ajustado para a pasta Pages)
-            import.meta.glob('./Pages/**/*.vue') // Carrega todas as páginas dinamicamente da pasta Pages
+            import.meta.glob('./Pages/**/*.vue', { eager: true }) // Carrega todas as páginas dinamicamente da pasta Pages
         ),
 
     setup({ el, App, props, plugin }) {

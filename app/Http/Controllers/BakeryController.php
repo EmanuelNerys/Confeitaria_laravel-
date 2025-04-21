@@ -11,13 +11,15 @@ class BakeryController extends Controller
     // Exibição da lista de confeitarias
     public function index()
     {
-        $bakeries = Bakery::with('products')->get();
-
+        $bakeries = Bakery::with('products')->get();  // Carrega as confeitarias com os produtos
+    
+        // Verifica se há mensagens de flash e as passa para a view
         return Inertia::render('Index', [
             'bakeries' => $bakeries,
-            'flash' => session('flash')
+            'flash' => session('flash')  // Passa a mensagem flash
         ]);
     }
+    
 
     // Exibição do formulário de criação
     public function create()
