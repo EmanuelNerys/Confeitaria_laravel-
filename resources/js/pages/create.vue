@@ -12,143 +12,42 @@
       </div>
 
       <!-- Formulário de cadastro -->
-      <form @submit.prevent="submit">
+      <form @submit.prevent="submit" enctype="multipart/form-data">
         <div class="space-y-6">
-          <div>
-            <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
-            <input 
-              id="nome" 
-              v-model="form.nome" 
-              type="text" 
-              placeholder="Nome da Confeitaria"
-              :class="{'border-red-500': form.errors.nome}" 
+          <!-- Campos de texto -->
+          <div v-for="field in fields" :key="field.id">
+            <label :for="field.id" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+            <input
+              :id="field.id"
+              :value="form[field.id]"
+              @input="event => form[field.id] = event.target.value"
+              :type="field.type"
+              :placeholder="field.placeholder"
+              :class="{'border-red-500': form.errors[field.id]}"
               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
+              @blur="field.id === 'cep' ? buscarCep() : null"
             />
-            <p v-if="form.errors.nome" class="text-sm text-red-500 mt-1">{{ form.errors.nome }}</p>
+            <p v-if="form.errors[field.id]" class="text-sm text-red-500 mt-1">{{ form.errors[field.id] }}</p>
           </div>
 
+          <!-- Campo de imagem -->
           <div>
-            <label for="cep" class="block text-sm font-medium text-gray-700">CEP</label>
-            <input 
-              id="cep" 
-              v-model="form.cep" 
-              type="text" 
-              placeholder="CEP"
-              @blur="buscarCep" 
-              :class="{'border-red-500': form.errors.cep}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
+            <label for="image" class="block text-sm font-medium text-gray-700">Imagem</label>
+            <input
+              id="image"
+              type="file"
+              @change="handleImage"
+              accept="image/*"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
             />
-            <p v-if="form.errors.cep" class="text-sm text-red-500 mt-1">{{ form.errors.cep }}</p>
+            <p v-if="form.errors.image" class="text-sm text-red-500 mt-1">{{ form.errors.image }}</p>
           </div>
 
+          <!-- Botão de envio -->
           <div>
-            <label for="rua" class="block text-sm font-medium text-gray-700">Rua</label>
-            <input 
-              id="rua" 
-              v-model="form.rua" 
-              type="text" 
-              placeholder="Rua"
-              :class="{'border-red-500': form.errors.rua}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-            />
-            <p v-if="form.errors.rua" class="text-sm text-red-500 mt-1">{{ form.errors.rua }}</p>
-          </div>
-
-          <div>
-            <label for="numero" class="block text-sm font-medium text-gray-700">Número</label>
-            <input 
-              id="numero" 
-              v-model="form.numero" 
-              type="text" 
-              placeholder="Número"
-              :class="{'border-red-500': form.errors.numero}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-            />
-            <p v-if="form.errors.numero" class="text-sm text-red-500 mt-1">{{ form.errors.numero }}</p>
-          </div>
-
-          <div>
-            <label for="bairro" class="block text-sm font-medium text-gray-700">Bairro</label>
-            <input 
-              id="bairro" 
-              v-model="form.bairro" 
-              type="text" 
-              placeholder="Bairro"
-              :class="{'border-red-500': form.errors.bairro}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-            />
-            <p v-if="form.errors.bairro" class="text-sm text-red-500 mt-1">{{ form.errors.bairro }}</p>
-          </div>
-
-          <div>
-            <label for="cidade" class="block text-sm font-medium text-gray-700">Cidade</label>
-            <input 
-              id="cidade" 
-              v-model="form.cidade" 
-              type="text" 
-              placeholder="Cidade"
-              :class="{'border-red-500': form.errors.cidade}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-            />
-            <p v-if="form.errors.cidade" class="text-sm text-red-500 mt-1">{{ form.errors.cidade }}</p>
-          </div>
-
-          <div>
-            <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
-            <input 
-              id="estado" 
-              v-model="form.estado" 
-              type="text" 
-              placeholder="Estado"
-              :class="{'border-red-500': form.errors.estado}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-            />
-            <p v-if="form.errors.estado" class="text-sm text-red-500 mt-1">{{ form.errors.estado }}</p>
-          </div>
-
-          <div>
-            <label for="telefone" class="block text-sm font-medium text-gray-700">Telefone</label>
-            <input 
-              id="telefone" 
-              v-model="form.telefone" 
-              type="text" 
-              placeholder="Telefone"
-              :class="{'border-red-500': form.errors.telefone}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-            />
-            <p v-if="form.errors.telefone" class="text-sm text-red-500 mt-1">{{ form.errors.telefone }}</p>
-          </div>
-
-          <div>
-            <label for="latitude" class="block text-sm font-medium text-gray-700">Latitude</label>
-            <input 
-              id="latitude" 
-              v-model="form.latitude" 
-              type="text" 
-              placeholder="Latitude"
-              :class="{'border-red-500': form.errors.latitude}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-            />
-            <p v-if="form.errors.latitude" class="text-sm text-red-500 mt-1">{{ form.errors.latitude }}</p>
-          </div>
-
-          <div>
-            <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude</label>
-            <input 
-              id="longitude" 
-              v-model="form.longitude" 
-              type="text" 
-              placeholder="Longitude"
-              :class="{'border-red-500': form.errors.longitude}" 
-              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-            />
-            <p v-if="form.errors.longitude" class="text-sm text-red-500 mt-1">{{ form.errors.longitude }}</p>
-          </div>
-
-          <div>
-            <button 
-              type="submit" 
-              :disabled="form.processing" 
+            <button
+              type="submit"
+              :disabled="form.processing"
               class="w-full bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:bg-gray-300"
             >
               Salvar
@@ -164,10 +63,9 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
 
-const { flash } = usePage().props // Acessando flash, que pode ser vazio
+const { flash } = usePage().props
 
 const form = useForm({
   nome: '',
@@ -180,13 +78,38 @@ const form = useForm({
   telefone: '',
   latitude: '',
   longitude: '',
+  image: null,
 })
 
+const fields = [
+  { id: 'nome', label: 'Nome', placeholder: 'Nome da Confeitaria', type: 'text' },
+  { id: 'cep', label: 'CEP', placeholder: 'CEP', type: 'text' },
+  { id: 'rua', label: 'Rua', placeholder: 'Rua', type: 'text' },
+  { id: 'numero', label: 'Número', placeholder: 'Número', type: 'text' },
+  { id: 'bairro', label: 'Bairro', placeholder: 'Bairro', type: 'text' },
+  { id: 'cidade', label: 'Cidade', placeholder: 'Cidade', type: 'text' },
+  { id: 'estado', label: 'Estado', placeholder: 'Estado', type: 'text' },
+  { id: 'telefone', label: 'Telefone', placeholder: 'Telefone', type: 'text' },
+  { id: 'latitude', label: 'Latitude', placeholder: 'Latitude', type: 'text' },
+  { id: 'longitude', label: 'Longitude', placeholder: 'Longitude', type: 'text' },
+]
+
+function handleImage(event) {
+  form.image = event.target.files[0]
+}
+
 function submit() {
+  const data = new FormData()
+  Object.entries(form.data()).forEach(([key, value]) => {
+    if (value !== null && value !== '') {
+      data.append(key, value)
+    }
+  })
+
   form.post('/bakeries', {
-    onSuccess: () => {
-      form.reset()
-    },
+    data,
+    forceFormData: true,
+    onSuccess: () => form.reset(),
     onError: () => {
       flash.error = flash.error || 'Erro ao cadastrar confeitaria. Tente novamente.'
     }
@@ -196,7 +119,10 @@ function submit() {
 async function buscarCep() {
   const cep = form.cep.replace(/\D/g, '')
 
-  if (cep.length !== 8) return
+  if (cep.length !== 8) {
+    flash.error = 'CEP inválido.'
+    return
+  }
 
   try {
     const response = await fetch(`/buscar-cep/${cep}`)
@@ -213,7 +139,3 @@ async function buscarCep() {
   }
 }
 </script>
-
-<style scoped>
-/* Estilos globais não são necessários com Tailwind */
-</style>

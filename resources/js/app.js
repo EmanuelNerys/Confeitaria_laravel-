@@ -1,30 +1,30 @@
-import '../css/app.css'; // Certifique-se de que o caminho para o CSS está correto
-import './bootstrap'; // Carrega o bootstrap se necessário
+import '../css/app.css';
+import './bootstrap';
 
-import { createInertiaApp } from '@inertiajs/vue3'; // Inertia.js
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'; // Helper do Vite para resolver as páginas
-import { createApp, h } from 'vue'; // Vue 3
-import { ZiggyVue } from '../../vendor/tightenco/ziggy'; // Ziggy para geração de URLs
+import { createInertiaApp } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { createApp, h } from 'vue';
+import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel'; // Obtém o nome da aplicação do .env
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`, // Definir o título dinâmico das páginas
+    title: (title) => `${title} - ${appName}`,
 
     resolve: (name) =>
         resolvePageComponent(
-            `./Pages/${name}.vue`, // Caminho das páginas Vue (ajustado para a pasta Pages)
-            import.meta.glob('./Pages/**/*.vue', { eager: true }) // Carrega todas as páginas dinamicamente da pasta Pages
+            `./Pages/${name}.vue`, // Vai procurar arquivos como Pages/Home.vue, Pages/Dashboard.vue etc.
+            import.meta.glob('./Pages/**/*.vue', { eager: true })
         ),
 
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) }) // Cria o app Vue e o monta no elemento
-            .use(plugin) // Usa o plugin do Inertia
-            .use(ZiggyVue) // Usa o Ziggy para lidar com as rotas no Vue
-            .mount(el); // Monta a aplicação no DOM
+        return createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .use(ZiggyVue)
+            .mount(el);
     },
 
     progress: {
-        color: '#4B5563', // Cor da barra de progresso
+        color: '#4B5563',
     },
 });

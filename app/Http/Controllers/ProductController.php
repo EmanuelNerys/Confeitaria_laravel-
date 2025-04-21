@@ -6,6 +6,7 @@ use App\Models\Bakery;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -23,7 +24,7 @@ class ProductController extends Controller
         // Retornar os dados para a view
         return Inertia::render('ProductsIndex', [
             'bakery' => $bakery, 
-            'flash' => session('flash'),
+            'flash' => session('flash'), // Flash messages
         ]);
     }
 
@@ -35,10 +36,9 @@ class ProductController extends Controller
      */
     public function create(Bakery $bakery)
     {
-        // Retornar a view para criar um novo produto
         return Inertia::render('ProductCreate', [
             'bakery' => $bakery, 
-            'flash' => session('flash'),
+            'flash' => session('flash'), // Flash messages
         ]);
     }
 
@@ -98,7 +98,7 @@ class ProductController extends Controller
         return Inertia::render('ProductEdit', [
             'bakery' => $bakery, 
             'product' => $product,
-            'flash' => session('flash'),
+            'flash' => session('flash'), // Flash messages
         ]);
     }
 

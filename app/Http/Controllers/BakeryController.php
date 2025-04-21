@@ -11,16 +11,14 @@ class BakeryController extends Controller
     // Exibição da lista de confeitarias
     public function index()
     {
-        $bakeries = Bakery::with('products')->get();  // Carrega as confeitarias com os produtos
+        $flash = session()->get('flash'); // Obtém a sessão flash se ela existir
     
-        // Verifica se há mensagens de flash e as passa para a view
         return Inertia::render('Index', [
-            'bakeries' => $bakeries,
-            'flash' => session('flash')  // Passa a mensagem flash
+            'bakeries' => Bakery::all(),
+            'flash' => $flash
         ]);
     }
     
-
     // Exibição do formulário de criação
     public function create()
     {
@@ -30,6 +28,7 @@ class BakeryController extends Controller
     // Armazenamento da nova confeitaria
     public function store(Request $request)
     {
+        // Validação dos campos do formulário
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'latitude' => 'required|numeric',
@@ -41,10 +40,19 @@ class BakeryController extends Controller
             'cidade' => 'required|string|max:255',
             'estado' => 'required|string|max:255',
             'telefone' => 'required|string|max:15',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validação da imagem
         ]);
 
+        // Se houver uma imagem, salva no diretório apropriado
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('bakeries', 'public'); // Salva a imagem na pasta 'public/storage/bakeries'
+            $data['image'] = $imagePath; // Adiciona o caminho da imagem no array de dados
+        }
+
+        // Cria a confeitaria no banco de dados
         Bakery::create($data);
 
+        // Redireciona para a lista de confeitarias com uma mensagem de sucesso
         return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria cadastrada com sucesso!']);
     }
 
@@ -59,6 +67,7 @@ class BakeryController extends Controller
     // Atualização de uma confeitaria
     public function update(Request $request, Bakery $bakery)
     {
+        // Validação dos campos do formulário
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'latitude' => 'required|numeric',
@@ -70,18 +79,48 @@ class BakeryController extends Controller
             'cidade' => 'required|string|max:255',
             'estado' => 'required|string|max:255',
             'telefone' => 'required|string|max:15',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validação da imagem
         ]);
 
+        // Se houver uma nova imagem, substitua a imagem antiga
+        if ($request->hasFile('image')) {
+            // Exclua a imagem anterior, caso exista
+            if ($bakery->image) {
+                // Verifique se a imagem realmente existe antes de deletá-la
+                $oldImagePath = public_path('storage/' . $bakery->image);
+                if (file_exists($oldImagePath)) {
+                    \Storage::disk('public')->delete($bakery->image); // Apaga a imagem antiga do storage
+                }
+            }
+
+            // Salva a nova imagem e adiciona o caminho no array de dados
+            $imagePath = $request->file('image')->store('bakeries', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        // Atualiza os dados da confeitaria no banco
         $bakery->update($data);
 
+        // Redireciona para a lista de confeitarias com uma mensagem de sucesso
         return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria atualizada com sucesso!']);
     }
 
     // Exclusão de uma confeitaria
     public function destroy(Bakery $bakery)
     {
+        // Exclui a imagem associada à confeitaria, caso exista
+        if ($bakery->image) {
+            // Verifique se a imagem realmente existe antes de deletá-la
+            $imagePath = public_path('storage/' . $bakery->image);
+            if (file_exists($imagePath)) {
+                \Storage::disk('public')->delete($bakery->image); // Apaga a imagem associada
+            }
+        }
+
+        // Exclui a confeitaria do banco
         $bakery->delete();
 
+        // Redireciona para a lista de confeitarias com uma mensagem de sucesso
         return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria excluída com sucesso!']);
     }
 }
