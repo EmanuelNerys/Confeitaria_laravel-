@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            // Certificando que a foreign key existe e aplica a exclusão em cascata
-            $table->foreign('bakery_id')
-                  ->references('id')
-                  ->on('bakeries')
-                  ->onDelete('cascade'); // Cascata para deletar produtos quando a confeitaria for deletada
+        Schema::table('produtos', function (Blueprint $table) {
+            // Adicionando a coluna bakery_id se não existir
+            $table->foreignId('bakery_id')->constrained('bakeries')->onDelete('cascade');
         });
     }
 
@@ -29,14 +26,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            // Remove a foreign key, revertendo a alteração
+        Schema::table('produtos', function (Blueprint $table) {
+            // Remove a chave estrangeira e a coluna
             $table->dropForeign(['bakery_id']);
-            
-            // Se necessário, restaure o relacionamento sem a exclusão em cascata
-            $table->foreign('bakery_id')
-                  ->references('id')
-                  ->on('bakeries');
+            $table->dropColumn('bakery_id');
         });
     }
 };

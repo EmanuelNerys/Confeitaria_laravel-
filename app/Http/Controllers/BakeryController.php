@@ -11,26 +11,23 @@ class BakeryController extends Controller
     // Exibição da lista de confeitarias
     public function index()
     {
-        // Recupera todas as confeitarias com seus produtos associados
         $bakeries = Bakery::with('products')->get();
 
-        // Retorna os dados para a página Vue.js via Inertia, incluindo a mensagem flash
-        return Inertia::render('Bakeries/Index', [
+        return Inertia::render('Index', [
             'bakeries' => $bakeries,
-            'flash' => session('flash') // Passando flash de sessão, caso haja
+            'flash' => session('flash')
         ]);
     }
 
     // Exibição do formulário de criação
     public function create()
     {
-        return Inertia::render('Bakeries/Create'); // Renderiza a página de criação
+        return Inertia::render('Create');
     }
 
     // Armazenamento da nova confeitaria
     public function store(Request $request)
     {
-        // Valida os dados antes de salvar no banco
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'latitude' => 'required|numeric',
@@ -46,14 +43,13 @@ class BakeryController extends Controller
 
         Bakery::create($data);
 
-        // Redireciona para a página de listagem com mensagem de sucesso
         return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria cadastrada com sucesso!']);
     }
 
     // Exibição do formulário de edição
     public function edit(Bakery $bakery)
     {
-        return Inertia::render('Bakeries/Edit', [
+        return Inertia::render('Edit', [
             'bakery' => $bakery
         ]);
     }
@@ -61,7 +57,6 @@ class BakeryController extends Controller
     // Atualização de uma confeitaria
     public function update(Request $request, Bakery $bakery)
     {
-        // Validação dos dados para atualização
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'latitude' => 'required|numeric',
@@ -75,10 +70,8 @@ class BakeryController extends Controller
             'telefone' => 'required|string|max:15',
         ]);
 
-        // Atualiza a confeitaria com os novos dados
         $bakery->update($data);
 
-        // Redireciona para a página de listagem com mensagem de sucesso
         return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria atualizada com sucesso!']);
     }
 
@@ -87,8 +80,6 @@ class BakeryController extends Controller
     {
         $bakery->delete();
 
-        // Redireciona para a página de listagem com mensagem de sucesso
         return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria excluída com sucesso!']);
     }
 }
-

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    // Define explicitamente o nome da tabela
+    protected $table = 'produtos';  // Nome correto da tabela no banco de dados
+
     // Campos que podem ser preenchidos em massa
     protected $fillable = [
         'name',
@@ -26,3 +29,4 @@ class Product extends Model
         'price' => 'decimal:2',
     ];
 }
+

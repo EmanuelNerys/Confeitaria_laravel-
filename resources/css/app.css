@@ -1,3 +1,27 @@
+/* Adiciona as diretivas do Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Se você precisar de algo customizado, você pode estender com classes */
+body {
+    @apply font-sans m-0 p-0; /* Substitui as propriedades globais */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    @apply font-bold; /* Aplica o estilo para fontes em negrito */
+}
+
+.bakery-card {
+    @apply border border-gray-300 p-4 mb-4 rounded-lg bg-gray-100 shadow-md; /* Reemplaza o seu CSS com Tailwind */
+}
+
+.actions button {
+    @apply bg-blue-500 text-white px-4 py-2 rounded; /* Substitui o estilo de botão com Tailwind */
+}
+
+.actions button:hover {
+    @apply bg-blue-700; /* Hover para o botão */
+}
+
+/* Adicione outros estilos personalizados aqui se necessário */
