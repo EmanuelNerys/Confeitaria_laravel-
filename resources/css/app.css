@@ -2,6 +2,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'leaflet/dist/leaflet.css';
+
 
 /* Se você precisar de algo customizado, você pode estender com classes */
 body {

@@ -57,12 +57,17 @@ class BakeryController extends Controller
     }
 
     // Exibição do formulário de edição
-    public function edit(Bakery $bakery)
-    {
-        return Inertia::render('Edit', [
-            'bakery' => $bakery
-        ]);
-    }
+    public function edit($id)
+{
+    $bakery = Bakery::findOrFail($id);
+
+    return Inertia::render('Edit', [
+        'bakery' => $bakery
+    ]);
+    dd($bakery);
+}
+
+    
 
     // Atualização de uma confeitaria
     public function update(Request $request, Bakery $bakery)

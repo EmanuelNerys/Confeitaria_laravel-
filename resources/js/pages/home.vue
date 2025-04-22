@@ -50,13 +50,22 @@
       </div>
     </section>
 
-    <!-- Botão de cadastro -->
-    <div class="text-center mt-12">
+    <!-- Botões de Cadastro e Edição -->
+    <div class="text-center mt-12 space-x-4">
+      <!-- Botão de Cadastro -->
       <a
         href="/bakeries/create"
         class="inline-block bg-blue-600 text-white text-lg font-medium py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300"
       >
         ➕ Cadastrar uma Confeitaria
+      </a>
+
+      <!-- Botão de Edição -->
+      <a
+        href="/bakeries/edit"
+        class="inline-block bg-yellow-500 text-white text-lg font-medium py-3 px-6 rounded-full shadow-lg hover:bg-yellow-600 transition-all duration-300"
+      >
+        ✏️ Editar Confeitaria
       </a>
     </div>
   </div>

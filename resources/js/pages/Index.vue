@@ -12,18 +12,18 @@
       {{ flashError }}
     </div>
 
-    <!-- Lista de Padarias -->
+    <!-- Lista de Confeitarias -->
     <div v-if="bakeries?.length > 0">
       <div v-for="bakery in bakeries" :key="bakery.id">
-        <h2 class="text-xl font-bold mb-2">{{ bakery.name }}</h2>
+        <h2 class="text-xl font-bold mb-2">{{ bakery.nome }}</h2> <!-- Alterado para 'nome' -->
 
-        <!-- Verifica se a padaria tem produtos -->
+        <!-- Verifica se a confeitaria tem produtos -->
         <div v-if="bakery.products && bakery.products.length > 0">
           <div v-for="product in bakery.products" :key="product.id" class="product-card bg-white shadow-lg rounded-lg p-4">
-            <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
-            <p class="text-gray-700 mb-2">{{ product.description }}</p>
-            <p class="text-gray-900 font-semibold">Preço: R$ {{ product.price }}</p>
-            <img v-if="product.image" :src="getProductImageUrl(product.image)" alt="Imagem do produto" class="w-full h-48 object-cover rounded-lg mt-4" />
+            <h3 class="text-xl font-semibold mb-2">{{ product.nome }}</h3> <!-- Alterado para 'nome' -->
+            <p class="text-gray-700 mb-2">{{ product.descricao }}</p> <!-- Alterado para 'descricao' -->
+            <p class="text-gray-900 font-semibold">Preço: R$ {{ product.preco }}</p> <!-- Alterado para 'preco' -->
+            <img v-if="product.imagem" :src="getProductImageUrl(product.imagem)" alt="Imagem do produto" class="w-full h-48 object-cover rounded-lg mt-4" />
             
             <!-- Botões de Ação -->
             <div class="mt-4 flex justify-between">
@@ -55,9 +55,6 @@ import { ref, watch } from 'vue'
 // Recuperando os dados passados para o Vue via Inertia
 const { bakeries, flash } = usePage().props
 
-// Verifique se 'flash' existe e se está correto
-console.log("Flash data:", flash);
-
 // Garantir que flash tenha valores padrão caso não seja passado
 const flashSuccess = ref(flash?.success || '')
 const flashError = ref(flash?.error || '')
@@ -78,22 +75,27 @@ function deleteProduct(id) {
     Inertia.delete(`/products/${id}`, {
       onSuccess: () => {
         flashSuccess.value = 'Produto excluído com sucesso!'
-        setTimeout(() => flashSuccess.value = '', 5000)
       },
       onError: () => {
         flashError.value = 'Erro ao excluir o produto.'
-        setTimeout(() => flashError.value = '', 5000)
       }
     })
   }
 }
 
-// Atualiza as mensagens de flash quando a página é carregada
-if (flash) {
-  watch(() => flash, (newFlash) => {
-    flashSuccess.value = newFlash?.success || ''
-    flashError.value = newFlash?.error || ''
-  });
-}
+// Limpar o flash quando os dados forem acessados
+watch([flashSuccess, flashError], () => {
+  setTimeout(() => {
+    flashSuccess.value = ''
+    flashError.value = ''
+  }, 5000)
+})
 </script>
 
+<style scoped>
+/* Adicione seus estilos personalizados aqui */
+.alert {
+  padding: 1rem;
+  border-radius: 5px;
+}
+</style>

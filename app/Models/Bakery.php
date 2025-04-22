@@ -9,18 +9,21 @@ class Bakery extends Model
 {
     use HasFactory;
 
+    // Definir explicitamente o nome da tabela caso seja diferente
+    // protected $table = 'bakeries';  // Se o nome da tabela for diferente, defina aqui.
+
     // Campos que podem ser preenchidos em massa (mass assignment)
     protected $fillable = [
-        'nome',        // Alterei de 'name' para 'nome'
+        'nome',        // Nome da confeitaria
         'latitude',
         'longitude',
         'cep',
-        'rua',         // Alterei de 'street' para 'rua'
-        'numero',      // Alterei de 'number' para 'numero'
-        'bairro',      // Alterei de 'neighborhood' para 'bairro'
-        'cidade',      // Alterei de 'city' para 'cidade'
-        'estado',      // Alterei de 'state' para 'estado'
-        'telefone',    // Alterei de 'phone' para 'telefone'
+        'rua',         // Rua onde está a confeitaria
+        'numero',      // Número do local
+        'bairro',      // Bairro onde está a confeitaria
+        'cidade',      // Cidade
+        'estado',      // Estado
+        'telefone',    // Telefone da confeitaria
     ];
 
     // Relacionamento: Uma confeitaria pode ter muitos produtos
@@ -29,9 +32,26 @@ class Bakery extends Model
         return $this->hasMany(Product::class);
     }
 
+    // Relacionamento: Uma confeitaria pode ter muitas imagens
+    public function images()
+    {
+        return $this->hasMany(Image::class); // Uma bakery pode ter muitas imagens
+    }
+
     // Casts para garantir que latitude e longitude sejam floats
     protected $casts = [
         'latitude' => 'float',
         'longitude' => 'float',
     ];
+
+    /**
+     * Função que retorna as confeitarias com seus produtos e imagens.
+     * Utiliza Eager Loading para carregar os produtos e imagens associados.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getBakeriesWithProductsAndImages()
+    {
+        return self::with(['products', 'images'])->get(); // Eager loading para carregar os produtos e imagens junto
+    }
 }

@@ -43,9 +43,13 @@ Route::get('/home', function () {
 Route::get('/bakeries', [BakeryController::class, 'index'])->name('bakeries.index');
 Route::get('/bakeries/create', [BakeryController::class, 'create'])->name('bakeries.create');
 Route::post('/bakeries', [BakeryController::class, 'store'])->name('bakeries.store');
-Route::get('/bakeries/{bakery}/edit', [BakeryController::class, 'edit'])->name('bakeries.edit');
+Route::get('/bakeries/{id}/edit', [BakeryController::class, 'edit'])->name('bakeries.edit');
 Route::put('/bakeries/{bakery}', [BakeryController::class, 'update'])->name('bakeries.update');
-Route::delete('/bakeries/{bakery}', [BakeryController::class, 'destroy'])->name('bakeries.destroy');
+Route::delete('/bakeries/{id}', [BakeryController::class, 'destroy'])->name('bakeries.destroy');
+
+// Rota do mapa 
+Route::get('/bakeries/map', [BakeryController::class, 'map'])->name('bakeries.map');
+
 
 // Nova rota para buscar endereço via CEP
 Route::get('/buscar-cep/{cep}', function ($cep) {
