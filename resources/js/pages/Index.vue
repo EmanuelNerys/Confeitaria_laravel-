@@ -13,24 +13,45 @@
     </div>
 
     <!-- Lista de Confeitarias -->
-    <div v-if="bakeries?.length > 0">
+    <div v-if="bakeries && bakeries.length > 0">
       <div v-for="bakery in bakeries" :key="bakery.id">
-        <h2 class="text-xl font-bold mb-2">{{ bakery.nome }}</h2> <!-- Alterado para 'nome' -->
+        <h2 class="text-xl font-bold mb-2">{{ bakery.name }}</h2>
 
         <!-- Verifica se a confeitaria tem produtos -->
         <div v-if="bakery.products && bakery.products.length > 0">
-          <div v-for="product in bakery.products" :key="product.id" class="product-card bg-white shadow-lg rounded-lg p-4">
-            <h3 class="text-xl font-semibold mb-2">{{ product.nome }}</h3> <!-- Alterado para 'nome' -->
-            <p class="text-gray-700 mb-2">{{ product.descricao }}</p> <!-- Alterado para 'descricao' -->
-            <p class="text-gray-900 font-semibold">Preço: R$ {{ product.preco }}</p> <!-- Alterado para 'preco' -->
-            <img v-if="product.imagem" :src="getProductImageUrl(product.imagem)" alt="Imagem do produto" class="w-full h-48 object-cover rounded-lg mt-4" />
-            
+          <div
+            v-for="product in bakery.products"
+            :key="product.id"
+            class="product-card bg-white shadow-lg rounded-lg p-4 mb-4"
+          >
+            <h3 class="text-xl font-semibold mb-2">{{ product.name || 'Produto sem nome' }}</h3>
+            <p class="text-gray-700 mb-2">{{ product.description || 'Descrição não disponível' }}</p>
+            <p class="text-gray-900 font-semibold">Preço: R$ {{ product.price ? parseFloat(product.price).toFixed(2) : 'Preço não informado' }}</p>
+            <img
+              v-if="product.image"
+              :src="getProductImageUrl(product.image)"
+              alt="Imagem do produto"
+              class="w-full h-48 object-cover rounded-lg mt-4"
+            />
+            <img
+              v-else
+              src="/default-product-image.jpg"
+              alt="Imagem padrão do produto"
+              class="w-full h-48 object-cover rounded-lg mt-4"
+            />
+
             <!-- Botões de Ação -->
             <div class="mt-4 flex justify-between">
-              <button @click="editProduct(product.id)" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+              <button
+                @click="editProduct(product.id)"
+                class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+              >
                 Editar
               </button>
-              <button @click="deleteProduct(product.id)" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700">
+              <button
+                @click="deleteProduct(product.id)"
+                class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+              >
                 Excluir
               </button>
             </div>
@@ -38,38 +59,33 @@
         </div>
 
         <p v-else class="text-gray-500">Nenhum produto nesta confeitaria.</p>
-        <hr class="my-6">
+        <hr class="my-6" />
       </div>
     </div>
 
-    <!-- Caso não haja padarias -->
+    <!-- Caso não haja confeitarias -->
     <p v-else class="text-center text-gray-600">Nenhuma confeitaria cadastrada.</p>
   </div>
 </template>
 
 <script setup>
+import { ref, watch } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { Inertia } from '@inertiajs/inertia'
-import { ref, watch } from 'vue'
 
-// Recuperando os dados passados para o Vue via Inertia
 const { bakeries, flash } = usePage().props
 
-// Garantir que flash tenha valores padrão caso não seja passado
 const flashSuccess = ref(flash?.success || '')
 const flashError = ref(flash?.error || '')
 
-// Função para exibir a imagem do produto
 function getProductImageUrl(image) {
-  return image ? `/storage/products/${image}` : '/default-image.jpg'; // Imagem padrão caso não haja imagem
+  return image ? `/storage/products/${image}` : '/default-product-image.jpg'
 }
 
-// Função para editar um produto
 function editProduct(id) {
   Inertia.visit(`/products/${id}/edit`)
 }
 
-// Função para excluir um produto
 function deleteProduct(id) {
   if (confirm('Tem certeza que deseja excluir este produto?')) {
     Inertia.delete(`/products/${id}`, {
@@ -83,7 +99,7 @@ function deleteProduct(id) {
   }
 }
 
-// Limpar o flash quando os dados forem acessados
+// Limpa mensagens flash depois de 5 segundos
 watch([flashSuccess, flashError], () => {
   setTimeout(() => {
     flashSuccess.value = ''
@@ -93,9 +109,11 @@ watch([flashSuccess, flashError], () => {
 </script>
 
 <style scoped>
-/* Adicione seus estilos personalizados aqui */
 .alert {
   padding: 1rem;
   border-radius: 5px;
+}
+.product-card img {
+  object-fit: cover;
 }
 </style>

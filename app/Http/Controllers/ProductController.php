@@ -18,13 +18,13 @@ class ProductController extends Controller
      */
     public function index(Bakery $bakery)
     {
-        // Garantir que a confeitaria existe
-        $bakery->load('products'); // Carregar os produtos da confeitaria
-
-        // Retornar os dados para a view
-        return Inertia::render('ProductsIndex', [
-            'bakery' => $bakery, 
-            'flash' => session('flash'), // Flash messages
+        // Garantir que a confeitaria existe e carregar os produtos relacionados
+        $bakery->load('products'); 
+    
+        // Retornar os dados para a view usando Inertia
+        return Inertia::render('Products/Index', [
+            'bakery' => $bakery, // Passa a confeitaria com os produtos
+            'flash' => session('flash'), // Flash messages, caso existam
         ]);
     }
 

@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('bakeries', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nome');
             $table->decimal('latitude', 10, 7);  // 7 casas decimais para maior precisão
             $table->decimal('longitude', 10, 7); // 7 casas decimais para maior precisão
             $table->string('cep', 10); // Aumentando a largura para CEP com hífen

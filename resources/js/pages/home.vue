@@ -15,14 +15,14 @@
           class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden"
         >
           <img
-            :src="bakery.image ? `/storage/${bakery.image}` : 'https://via.placeholder.com/400x200'"
+            :src="bakery.image ? `/storage/${bakery.image}` : '/storage/bakeries/Bakery1.jpg'"
             alt="Imagem da confeitaria"
             class="h-40 w-full object-cover"
           />
           <div class="p-5">
-            <h3 class="text-lg font-semibold text-gray-800">{{ bakery.nome }}</h3>
-            <p class="text-sm text-gray-500">{{ bakery.cidade }}, {{ bakery.estado }}</p>
-            <p class="text-sm text-gray-500">{{ bakery.rua }}, {{ bakery.numero }}</p>
+            <h3 class="text-lg font-semibold text-gray-800">{{ bakery.name }}</h3>
+            <p class="text-sm text-gray-500">{{ bakery.city }}, {{ bakery.state }}</p>
+            <p class="text-sm text-gray-500">{{ bakery.street }}, {{ bakery.number }}</p>
           </div>
         </div>
       </div>
@@ -38,20 +38,23 @@
           class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden"
         >
           <img
-            :src="product.image ? `/storage/${product.image}` : 'https://via.placeholder.com/400x200'"
+            :src="product.image ? `/storage/${product.image}` : 'storage/bakeries/cupcakemorango.jpg'"
             alt="Imagem do produto"
             class="h-40 w-full object-cover"
           />
           <div class="p-5">
             <h3 class="text-lg font-semibold text-gray-800">{{ product.name }}</h3>
-            <p class="text-blue-600 font-bold mt-2 text-lg">R$ {{ parseFloat(product.price).toFixed(2) }}</p>
+            <p v-if="product.price" class="text-blue-600 font-bold mt-2 text-lg">
+              R$ {{ parseFloat(product.price).toFixed(2) }}
+            </p>
+            <p v-else class="text-gray-400 italic">Preço não informado</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Botões de Cadastro e Edição -->
-    <div class="text-center mt-12 space-x-4">
+    <!-- Botões de Cadastro e Edição lado a lado (na parte inferior) -->
+    <div class="text-center mt-12 flex justify-center space-x-4">
       <!-- Botão de Cadastro -->
       <a
         href="/bakeries/create"
@@ -60,9 +63,10 @@
         ➕ Cadastrar uma Confeitaria
       </a>
 
-      <!-- Botão de Edição -->
+      <!-- Botão de Edição (pega a primeira da lista, se houver) -->
       <a
-        href="/bakeries/edit"
+        v-if="bakeries.length"
+        :href="`/bakeries/${bakeries[0].id}/edit`"
         class="inline-block bg-yellow-500 text-white text-lg font-medium py-3 px-6 rounded-full shadow-lg hover:bg-yellow-600 transition-all duration-300"
       >
         ✏️ Editar Confeitaria

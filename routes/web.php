@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Models\Bakery;
 use App\Models\Product;
 use Illuminate\Foundation\Application;
@@ -39,16 +40,64 @@ Route::get('/home', function () {
     ]);
 })->name('home');
 
-// Rotas de Confeitaria
-Route::get('/bakeries', [BakeryController::class, 'index'])->name('bakeries.index');
-Route::get('/bakeries/create', [BakeryController::class, 'create'])->name('bakeries.create');
-Route::post('/bakeries', [BakeryController::class, 'store'])->name('bakeries.store');
-Route::get('/bakeries/{id}/edit', [BakeryController::class, 'edit'])->name('bakeries.edit');
-Route::put('/bakeries/{bakery}', [BakeryController::class, 'update'])->name('bakeries.update');
-Route::delete('/bakeries/{id}', [BakeryController::class, 'destroy'])->name('bakeries.destroy');
+// ROTAS DE CONFEITARIAS
+Route::prefix('bakeries')->group(function () {
+    // Rota para listar todas as confeitarias
+    Route::get('/', [BakeryController::class, 'index'])->name('bakeries.index');
+    
+    // Rota para exibir o formulário de criação de uma nova confeitaria
+    Route::get('/create', [BakeryController::class, 'create'])->name('bakeries.create');
+    
+    // Rota para armazenar os dados da nova confeitaria
+    Route::post('/', [BakeryController::class, 'store'])->name('bakeries.store');
+    
+    // Rota para exibir o formulário de edição de uma confeitaria existente
+    Route::get('{bakery}/edit', [BakeryController::class, 'edit'])->name('bakeries.edit');
+    
+    // Rota para atualizar os dados de uma confeitaria existente
+    Route::put('{bakery}', [BakeryController::class, 'update'])->name('bakeries.update');
+    
+    // Rota para excluir uma confeitaria
+    Route::delete('{bakery}', [BakeryController::class, 'destroy'])->name('bakeries.destroy');
+    
+    // Rota para exibir os detalhes de uma confeitaria
+    Route::get('{bakery}/show', [BakeryController::class, 'show'])->name('bakeries.show');
+    
+    // ROTAS DE PRODUTOS
+    Route::prefix('{bakery}/products')->group(function () {
+        // Rota para listar todos os produtos de uma confeitaria
+        Route::get('/', [ProductController::class, 'index'])->name('products.index');
+        
+        // Rota para exibir o formulário de criação de um novo produto para uma confeitaria
+        Route::get('/create', [ProductController::class, 'create'])->name('products.create');
+        
+        // Rota para armazenar um novo produto
+        Route::post('/', [ProductController::class, 'store'])->name('products.store');
+        
+        // Rota para exibir o formulário de edição de um produto
+        Route::get('{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        
+        // Rota para atualizar um produto
+        Route::put('{product}', [ProductController::class, 'update'])->name('products.update');
+        
+        // Rota para excluir um produto
+        Route::delete('{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    });
+});
+
+
+
+
+
+
+
+
+
 
 // Rota do mapa 
 Route::get('/bakeries/map', [BakeryController::class, 'map'])->name('bakeries.map');
+
+
 
 
 // Nova rota para buscar endereço via CEP

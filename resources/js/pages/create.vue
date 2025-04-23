@@ -19,13 +19,12 @@
             <label :for="field.id" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
             <input
               :id="field.id"
-              :value="form[field.id]"
-              @input="event => form[field.id] = event.target.value"
+              v-model="form[field.id]"
               :type="field.type"
               :placeholder="field.placeholder"
               :class="{'border-red-500': form.errors[field.id]}"
               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
-              @blur="field.id === 'cep' ? buscarCep() : null"
+              @blur="field.id === 'postal_code' ? buscarCep() : null"
             />
             <p v-if="form.errors[field.id]" class="text-sm text-red-500 mt-1">{{ form.errors[field.id] }}</p>
           </div>
@@ -68,28 +67,28 @@ import { useForm, usePage } from '@inertiajs/inertia-vue3'
 const { flash } = usePage().props
 
 const form = useForm({
-  nome: '',
-  cep: '',
-  rua: '',
-  numero: '',
-  bairro: '',
-  cidade: '',
-  estado: '',
-  telefone: '',
+  name: '',
+  postal_code: '',
+  street: '',
+  number: '',
+  neighborhood: '',
+  city: '',
+  state: '',
+  phone: '',
   latitude: '',
   longitude: '',
   image: null,
 })
 
 const fields = [
-  { id: 'nome', label: 'Nome', placeholder: 'Nome da Confeitaria', type: 'text' },
-  { id: 'cep', label: 'CEP', placeholder: 'CEP', type: 'text' },
-  { id: 'rua', label: 'Rua', placeholder: 'Rua', type: 'text' },
-  { id: 'numero', label: 'Número', placeholder: 'Número', type: 'text' },
-  { id: 'bairro', label: 'Bairro', placeholder: 'Bairro', type: 'text' },
-  { id: 'cidade', label: 'Cidade', placeholder: 'Cidade', type: 'text' },
-  { id: 'estado', label: 'Estado', placeholder: 'Estado', type: 'text' },
-  { id: 'telefone', label: 'Telefone', placeholder: 'Telefone', type: 'text' },
+  { id: 'name', label: 'Nome', placeholder: 'Nome da Confeitaria', type: 'text' },
+  { id: 'postal_code', label: 'CEP', placeholder: 'CEP', type: 'text' },
+  { id: 'street', label: 'Rua', placeholder: 'Rua', type: 'text' },
+  { id: 'number', label: 'Número', placeholder: 'Número', type: 'text' },
+  { id: 'neighborhood', label: 'Bairro', placeholder: 'Bairro', type: 'text' },
+  { id: 'city', label: 'Cidade', placeholder: 'Cidade', type: 'text' },
+  { id: 'state', label: 'Estado', placeholder: 'Estado', type: 'text' },
+  { id: 'phone', label: 'Telefone', placeholder: 'Telefone', type: 'text' },
   { id: 'latitude', label: 'Latitude', placeholder: 'Latitude', type: 'text' },
   { id: 'longitude', label: 'Longitude', placeholder: 'Longitude', type: 'text' },
 ]
@@ -99,6 +98,9 @@ function handleImage(event) {
 }
 
 function submit() {
+  console.log('🔄 Enviando dados:', form.data())
+
+  // Criando um novo FormData para enviar o arquivo de imagem corretamente
   const data = new FormData()
   Object.entries(form.data()).forEach(([key, value]) => {
     if (value !== null && value !== '') {
@@ -106,18 +108,24 @@ function submit() {
     }
   })
 
+  // Envia os dados via POST para a rota de criação
   form.post('/bakeries', {
     data,
-    forceFormData: true,
-    onSuccess: () => form.reset(),
+    forceFormData: true, // Garante que os dados sejam enviados como FormData
+    onSuccess: () => {
+      console.log('✅ Confeitaria cadastrada com sucesso!')
+      alert('✅ Confeitaria cadastrada com sucesso!')
+      form.reset()
+    },
     onError: () => {
-      flash.error = flash.error || 'Erro ao cadastrar confeitaria. Tente novamente.'
+      console.error('❌ Erro ao cadastrar confeitaria:', form.errors)
+      alert('❌ Ocorreu um erro ao cadastrar a confeitaria.')
     }
   })
 }
 
 async function buscarCep() {
-  const cep = form.cep.replace(/\D/g, '')
+  const cep = form.postal_code.replace(/\D/g, '')
 
   if (cep.length !== 8) {
     flash.error = 'CEP inválido.'
@@ -129,10 +137,10 @@ async function buscarCep() {
     if (!response.ok) throw new Error('CEP não encontrado')
     const data = await response.json()
 
-    form.rua = data.logradouro || ''
-    form.bairro = data.bairro || ''
-    form.cidade = data.localidade || ''
-    form.estado = data.uf || ''
+    form.street = data.logradouro || ''
+    form.neighborhood = data.bairro || ''
+    form.city = data.localidade || ''
+    form.state = data.uf || ''
   } catch (error) {
     console.error('Erro ao buscar CEP:', error)
     flash.error = 'CEP inválido ou não encontrado.'

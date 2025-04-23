@@ -9,21 +9,22 @@ class Bakery extends Model
 {
     use HasFactory;
 
-    // Definir explicitamente o nome da tabela caso seja diferente
-    // protected $table = 'bakeries';  // Se o nome da tabela for diferente, defina aqui.
+    // Definir explicitamente o nome da tabela, se necessário
+    // protected $table = 'bakeries';
 
     // Campos que podem ser preenchidos em massa (mass assignment)
     protected $fillable = [
-        'nome',        // Nome da confeitaria
+        'name',         // Nome da confeitaria (alterado para 'name' conforme a tabela)
         'latitude',
         'longitude',
-        'cep',
-        'rua',         // Rua onde está a confeitaria
-        'numero',      // Número do local
-        'bairro',      // Bairro onde está a confeitaria
-        'cidade',      // Cidade
-        'estado',      // Estado
-        'telefone',    // Telefone da confeitaria
+        'postal_code', // ✅ Corrigido aqui
+        'street',       // Alterado para 'street', já que você tem esse campo na tabela
+        'number',       // Número do local
+        'neighborhood', // Bairro onde está a confeitaria
+        'city',         // Cidade
+        'state',        // Estado
+        'phone',        // Telefone da confeitaria
+        'image',        // Caminho da imagem (⚠️ agora incluído!)
     ];
 
     // Relacionamento: Uma confeitaria pode ter muitos produtos
@@ -35,7 +36,7 @@ class Bakery extends Model
     // Relacionamento: Uma confeitaria pode ter muitas imagens
     public function images()
     {
-        return $this->hasMany(Image::class); // Uma bakery pode ter muitas imagens
+        return $this->hasMany(Image::class);
     }
 
     // Casts para garantir que latitude e longitude sejam floats
@@ -47,11 +48,9 @@ class Bakery extends Model
     /**
      * Função que retorna as confeitarias com seus produtos e imagens.
      * Utiliza Eager Loading para carregar os produtos e imagens associados.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
      */
     public static function getBakeriesWithProductsAndImages()
     {
-        return self::with(['products', 'images'])->get(); // Eager loading para carregar os produtos e imagens junto
+        return self::with(['products', 'images'])->get(); // Carrega produtos e imagens com as confeitarias
     }
 }
