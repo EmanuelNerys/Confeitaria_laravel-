@@ -64,7 +64,7 @@ Route::prefix('bakeries')->group(function () {
     Route::get('{bakery}/show', [BakeryController::class, 'show'])->name('bakeries.show');
     
     // ROTAS DE PRODUTOS
-    Route::prefix('{bakery}/products')->group(function () {
+    Route::prefix('/products')->group(function () {
         // Rota para listar todos os produtos de uma confeitaria
         Route::get('/', [ProductController::class, 'index'])->name('products.index');
         

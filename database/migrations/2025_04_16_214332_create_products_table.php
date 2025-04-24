@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('image');
             $table->foreignId('bakery_id')->constrained('bakeries')->onDelete('cascade');
+            
         });
     }
 
