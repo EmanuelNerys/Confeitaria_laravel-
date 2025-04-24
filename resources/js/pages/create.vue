@@ -68,27 +68,18 @@ const { flash } = usePage().props
 
 const form = useForm({
   name: '',
-  postal_code: '',
-  street: '',
-  number: '',
-  neighborhood: '',
-  city: '',
-  state: '',
-  phone: '',
+  description: '',
+  address: '',
   latitude: '',
   longitude: '',
-  image: null,
+  created_at: '',
+  created_at: '',
 })
 
 const fields = [
   { id: 'name', label: 'Nome', placeholder: 'Nome da Confeitaria', type: 'text' },
-  { id: 'postal_code', label: 'CEP', placeholder: 'CEP', type: 'text' },
-  { id: 'street', label: 'Rua', placeholder: 'Rua', type: 'text' },
-  { id: 'number', label: 'Número', placeholder: 'Número', type: 'text' },
-  { id: 'neighborhood', label: 'Bairro', placeholder: 'Bairro', type: 'text' },
-  { id: 'city', label: 'Cidade', placeholder: 'Cidade', type: 'text' },
-  { id: 'state', label: 'Estado', placeholder: 'Estado', type: 'text' },
-  { id: 'phone', label: 'Telefone', placeholder: 'Telefone', type: 'text' },
+  { id: 'description', label: 'CEP', placeholder: 'CEP', type: 'text' },
+  { id: 'address', label: 'Endereço', placeholder: 'Rua', type: 'text' },
   { id: 'latitude', label: 'Latitude', placeholder: 'Latitude', type: 'text' },
   { id: 'longitude', label: 'Longitude', placeholder: 'Longitude', type: 'text' },
 ]

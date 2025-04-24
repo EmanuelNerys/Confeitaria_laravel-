@@ -42,33 +42,33 @@ Route::get('/home', function () {
 
 // ROTAS DE CONFEITARIAS
 Route::prefix('bakeries')->group(function () {
-    // Rota para listar todas as confeitarias
+    // Listar todas as confeitarias
     Route::get('/', [BakeryController::class, 'index'])->name('bakeries.index');
     
-    // Rota para listar os produtos de uma confeitaria específica
-    Route::get('/{id}/products', [ProductController::class, 'show'])->name('bakeries.products.show');
-
-    // rota para listar o produtos da confeitaria
-    Route::get('/', [ProductController::class, 'index'])->name('products.index');
-
-    // Rota para exibir o formulário de criação de uma nova confeitaria
+    // Exibir formulário de criação de confeitaria (GET)
     Route::get('/create', [BakeryController::class, 'create'])->name('bakeries.create');
-    
-    // Rota para armazenar os dados da nova confeitaria
+
+    // Armazenar confeitaria (POST)
     Route::post('/', [BakeryController::class, 'store'])->name('bakeries.store');
     
-    // Rota para exibir o formulário de edição de uma confeitaria existente
+    // Exibir formulário de edição
     Route::get('{bakery}/edit', [BakeryController::class, 'edit'])->name('bakeries.edit');
-    
-    // Rota para atualizar os dados de uma confeitaria existente
+
+    // Atualizar confeitaria
     Route::put('{bakery}', [BakeryController::class, 'update'])->name('bakeries.update');
-    
-    // Rota para excluir uma confeitaria
+
+    // Deletar confeitaria
     Route::delete('{bakery}', [BakeryController::class, 'destroy'])->name('bakeries.destroy');
-    
-    // Rota para exibir os detalhes de uma confeitaria
+
+    // Ver detalhes
     Route::get('{bakery}/show', [BakeryController::class, 'show'])->name('bakeries.show');
+
+    // Produtos da confeitaria específica
+    Route::get('/{id}/products', [ProductController::class, 'show'])->name('bakeries.products.show');
+
     
+
+
     // ROTAS DE PRODUTOS
     Route::prefix('/products')->group(function () {
       
