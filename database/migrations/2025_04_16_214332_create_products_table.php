@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::table('produtos', function (Blueprint $table) {
             // Adicionando a coluna bakery_id se não existir
+            $table->string('name'); // Aumentando a largura para CEP com hífen
+            $table->string('price');
+            $table->string('description');
+            $table->string('image');
             $table->foreignId('bakery_id')->constrained('bakeries')->onDelete('cascade');
         });
     }
