@@ -45,6 +45,12 @@ Route::prefix('bakeries')->group(function () {
     // Rota para listar todas as confeitarias
     Route::get('/', [BakeryController::class, 'index'])->name('bakeries.index');
     
+    // Rota para listar os produtos de uma confeitaria específica
+    Route::get('/{id}/products', [ProductController::class, 'show'])->name('bakeries.products.show');
+
+    // rota para listar o produtos da confeitaria
+    Route::get('/', [ProductController::class, 'index'])->name('products.index');
+
     // Rota para exibir o formulário de criação de uma nova confeitaria
     Route::get('/create', [BakeryController::class, 'create'])->name('bakeries.create');
     
@@ -65,8 +71,8 @@ Route::prefix('bakeries')->group(function () {
     
     // ROTAS DE PRODUTOS
     Route::prefix('/products')->group(function () {
-        // Rota para listar todos os produtos de uma confeitaria
-        Route::get('/', [ProductController::class, 'index'])->name('products.index');
+      
+    
         
         // Rota para exibir o formulário de criação de um novo produto para uma confeitaria
         Route::get('/create', [ProductController::class, 'create'])->name('products.create');

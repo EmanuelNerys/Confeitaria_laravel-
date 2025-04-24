@@ -74,7 +74,8 @@ class BakeryController extends Controller
     {
         $bakery = Bakery::findOrFail($id);
         return Inertia::render('Show', [
-            'bakery' => $bakery
+            'bakery' => $bakery,
+            
         ]);
     }
 

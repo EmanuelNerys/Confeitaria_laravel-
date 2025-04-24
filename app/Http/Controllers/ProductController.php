@@ -28,6 +28,15 @@ class ProductController extends Controller
         ]);
     }
 
+    // Método para mostrar os detalhes de uma confeitaria
+    public function show($id)
+    {
+        $bakery = Bakery::findOrFail($id);
+        return Inertia::render('Show', [
+            'products' => $bakery->products,
+        ]);
+    }
+
     /**
      * Exibe o formulário de criação de um novo produto.
      *
