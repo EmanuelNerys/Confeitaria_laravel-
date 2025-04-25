@@ -35,10 +35,12 @@ class BakeryController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:20',
             'address' => 'required|string|max:255',
-            'number' => 'required|string|max:10',
             'latitude' => 'nullable|string|max:100',
             'longitude' => 'nullable|string|max:100',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'number' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'neighborhood' => 'required|string|max:255',
         ]);
     
         $data = $validated;
@@ -84,15 +86,11 @@ class BakeryController extends Controller
         // Validação dos dados de atualização
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'postal_code' => 'required|string|max:10',
-            'street' => 'required|string|max:255',
+            'description' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
             'number' => 'required|string|max:10',
-            'neighborhood' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:15',
+            'latitude' => 'nullable|string|max:100',
+            'longitude' => 'nullable|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     

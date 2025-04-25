@@ -65,16 +65,11 @@ Route::prefix('bakeries')->group(function () {
     ]);
 })->name('bakeries.index');
 
-
-
-
-
-    
-    // 🆕 Exibir formulário de criação de confeitaria
+// 🆕 Exibir formulário de criação de confeitaria
     Route::get('/create', [BakeryController::class, 'create'])->name('bakeries.create');
     
     // 💾 Armazenar nova confeitaria (formulário POST)
-    Route::post('/', [BakeryController::class, 'store'])->name('bakeries.store');
+    Route::post('/store', [BakeryController::class, 'store'])->name('bakeries.store');
     
     // ✏️ Exibir formulário de edição de uma confeitaria específica
     Route::get('{bakery}/edit', [BakeryController::class, 'edit'])->name('bakeries.edit');

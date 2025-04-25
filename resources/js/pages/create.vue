@@ -72,14 +72,9 @@ const form = useForm({
   description: '',
   postal_code: '',
   address: '',
-  number: '',
   latitude: '',
   longitude: '',
   image: null,
-  street: '',
-  neighborhood: '',
-  city: '',
-  state: ''
 })
 
 const fields = [
@@ -87,7 +82,10 @@ const fields = [
   { id: 'description', label: 'Descrição', placeholder: 'Breve descrição', type: 'text' },
   { id: 'postal_code', label: 'CEP', placeholder: 'CEP', type: 'text' },
   { id: 'address', label: 'Endereço', placeholder: 'Rua', type: 'text' },
-  { id: 'number', label: 'Número', placeholder: 'Número', type: 'text' },
+  { id: 'neighborhood', label: 'Bairro', placeholder: 'Bairro', type: 'text' },
+  { id: 'city', label: 'Cidade', placeholder: 'Cidade', type: 'text' },
+  { id: 'state', label: 'Estado', placeholder: 'Estado', type: 'text' },
+  {id:'number', label: 'Número', placeholder: 'Número', type: 'text'},
   { id: 'latitude', label: 'Latitude', placeholder: 'Latitude', type: 'text' },
   { id: 'longitude', label: 'Longitude', placeholder: 'Longitude', type: 'text' },
 ]
@@ -99,7 +97,7 @@ function handleImage(event) {
 function submit() {
   console.log('🔄 Enviando dados:', form.data())
 
-  form.post('/bakeries', {
+  form.post('/bakeries/store', {
     forceFormData: true,
     onSuccess: () => {
       console.log('✅ Confeitaria cadastrada com sucesso!')
