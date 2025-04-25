@@ -9,9 +9,10 @@
     <section v-if="bakeries.length" class="mb-16">
       <h2 class="text-2xl font-bold text-gray-700 mb-6">🏪 Confeitarias em Destaque</h2>
       <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <div
+        <Link
           v-for="bakery in bakeries"
           :key="bakery.id"
+          :href="`/bakeries/${bakery.id}/show`"
           class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden"
         >
           <img
@@ -24,7 +25,7 @@
             <p class="text-sm text-gray-500">{{ bakery.city }}, {{ bakery.state }}</p>
             <p class="text-sm text-gray-500">{{ bakery.street }}, {{ bakery.number }}</p>
           </div>
-        </div>
+        </Link>
       </div>
     </section>
 
@@ -53,29 +54,29 @@
       </div>
     </section>
 
-    <!-- Botões de Cadastro e Edição lado a lado (na parte inferior) -->
+    <!-- Botões de Cadastro e Edição -->
     <div class="text-center mt-12 flex justify-center space-x-4">
-      <!-- Botão de Cadastro -->
-      <a
+      <Link
         href="/bakeries/create"
         class="inline-block bg-blue-600 text-white text-lg font-medium py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300"
       >
         ➕ Cadastrar uma Confeitaria
-      </a>
+      </Link>
 
-      <!-- Botão de Edição (pega a primeira da lista, se houver) -->
-      <a
+      <Link
         v-if="bakeries.length"
         :href="`/bakeries/${bakeries[0].id}/edit`"
         class="inline-block bg-yellow-500 text-white text-lg font-medium py-3 px-6 rounded-full shadow-lg hover:bg-yellow-600 transition-all duration-300"
       >
         ✏️ Editar Confeitaria
-      </a>
+      </Link>
     </div>
   </div>
 </template>
 
 <script setup>
+import { Link } from '@inertiajs/vue3'
+
 defineProps({
   bakeries: Array,
   recentProducts: Array,

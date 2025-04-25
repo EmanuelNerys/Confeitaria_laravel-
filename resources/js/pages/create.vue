@@ -69,13 +69,13 @@ const { flash } = usePage().props
 
 const form = useForm({
   name: '',
+  description: '',
   postal_code: '',
   address: '',
   number: '',
   latitude: '',
   longitude: '',
   image: null,
-  // campos auto preenchidos opcionalmente pelo CEP
   street: '',
   neighborhood: '',
   city: '',
@@ -84,6 +84,7 @@ const form = useForm({
 
 const fields = [
   { id: 'name', label: 'Nome', placeholder: 'Nome da Confeitaria', type: 'text' },
+  { id: 'description', label: 'Descrição', placeholder: 'Breve descrição', type: 'text' },
   { id: 'postal_code', label: 'CEP', placeholder: 'CEP', type: 'text' },
   { id: 'address', label: 'Endereço', placeholder: 'Rua', type: 'text' },
   { id: 'number', label: 'Número', placeholder: 'Número', type: 'text' },
