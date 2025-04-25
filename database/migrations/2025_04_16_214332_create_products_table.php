@@ -14,13 +14,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('produtos', function (Blueprint $table) {
-            // Adicionando a coluna bakery_id se não existir
-            $table->string('name'); // Aumentando a largura para CEP com hífen
-            $table->string('price');
-            $table->string('description');
-            $table->string('image');
-            $table->foreignId('bakery_id')->constrained('bakeries')->onDelete('cascade');
+            // Aumentando a largura de 'name' e usando 'text' para 'description'
+            $table->string('name'); // Campo para o nome do produto
+            $table->decimal('price', 8, 2); // Usando 'decimal' para o preço
+            $table->text('description'); // Usando 'text' para a descrição, caso seja mais longa
+            $table->string('image')->nullable(); // Imagem do produto (pode ser null)
             
+            // Adicionando a chave estrangeira para 'bakery_id'
+            $table->foreignId('bakery_id')->constrained('bakeries')->onDelete('cascade');
         });
     }
 
@@ -32,7 +33,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('produtos', function (Blueprint $table) {
-            // Remove a chave estrangeira e a coluna
+            // Removendo a chave estrangeira e a coluna
             $table->dropForeign(['bakery_id']);
             $table->dropColumn('bakery_id');
         });

@@ -40,7 +40,7 @@
 
     <!-- Mensagem quando não houver produtos -->
     <div v-else class="text-center mt-12 text-gray-500 text-lg">
-      Nenhum produto encontrado para esta confeitaria.
+      Nenhum produto
     </div>
 
     <!-- Flash Messages -->

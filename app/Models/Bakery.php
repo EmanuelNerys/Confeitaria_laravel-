@@ -30,7 +30,7 @@ class Bakery extends Model
     // Relacionamento: Uma confeitaria pode ter muitos produtos
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'bakery_id'); // Relacionamento com produtos
     }
 
     // Relacionamento: Uma confeitaria pode ter muitas imagens

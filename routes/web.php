@@ -41,55 +41,76 @@ Route::get('/home', function () {
 })->name('home');
 
 // ROTAS DE CONFEITARIAS
+// Grupo de rotas para CONFEITARIAS
 Route::prefix('bakeries')->group(function () {
-    // Listar todas as confeitarias
-    Route::get('/', [BakeryController::class, 'index'])->name('bakeries.index');
     
-    // Exibir formulário de criação de confeitaria (GET)
-    Route::get('/create', [BakeryController::class, 'create'])->name('bakeries.create');
+    // 🧁 Listar todas as confeitarias
+   // Route::get('/', [BakeryController::class, 'index'])->name('bakeries.index');
 
-    // Armazenar confeitaria (POST)
+   Route::get('/listaconfeitaria', function () {
+    return Inertia::render('ListaConfeitaria', [
+        'bakeries' => Bakery::with('products')->latest()->take(6)->get(),
+        'recentProducts' => Product::latest()->take(6)->get()->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'formatted_price' => $product->formatted_price, // Certifique-se de que existe no Product
+                'image' => $product->image ? asset('storage/products/' . $product->image) : null,
+            ];
+        }),
+        'flash' => [
+            'success' => session('success'),
+            'error' => session('error'),
+        ],
+    ]);
+})->name('bakeries.index');
+
+
+
+
+
+    
+    // 🆕 Exibir formulário de criação de confeitaria
+    Route::get('/create', [BakeryController::class, 'create'])->name('bakeries.create');
+    
+    // 💾 Armazenar nova confeitaria (formulário POST)
     Route::post('/', [BakeryController::class, 'store'])->name('bakeries.store');
     
-    // Exibir formulário de edição
+    // ✏️ Exibir formulário de edição de uma confeitaria específica
     Route::get('{bakery}/edit', [BakeryController::class, 'edit'])->name('bakeries.edit');
-
-    // Atualizar confeitaria
+    
+    // 🔁 Atualizar dados de uma confeitaria
     Route::put('{bakery}', [BakeryController::class, 'update'])->name('bakeries.update');
-
-    // Deletar confeitaria
+    
+    // 🗑️ Deletar uma confeitaria
     Route::delete('{bakery}', [BakeryController::class, 'destroy'])->name('bakeries.destroy');
-
-    // Ver detalhes
+    
+    // 👁️ Ver detalhes de uma confeitaria
     Route::get('{bakery}/show', [BakeryController::class, 'show'])->name('bakeries.show');
 
-    // Produtos da confeitaria específica
+    // 📦 Listar produtos de uma confeitaria específica
     Route::get('/{id}/products', [ProductController::class, 'show'])->name('bakeries.products.show');
-
     
-
-
-    // ROTAS DE PRODUTOS
+    // Subgrupo de rotas para PRODUTOS
     Route::prefix('/products')->group(function () {
-      
-    
-        
-        // Rota para exibir o formulário de criação de um novo produto para uma confeitaria
+
+        // 🆕 Exibir formulário de criação de produto
         Route::get('/create', [ProductController::class, 'create'])->name('products.create');
-        
-        // Rota para armazenar um novo produto
+
+        // 💾 Armazenar novo produto
         Route::post('/', [ProductController::class, 'store'])->name('products.store');
-        
-        // Rota para exibir o formulário de edição de um produto
+
+        // ✏️ Exibir formulário de edição de produto
         Route::get('{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-        
-        // Rota para atualizar um produto
+
+        // 🔁 Atualizar um produto
         Route::put('{product}', [ProductController::class, 'update'])->name('products.update');
-        
-        // Rota para excluir um produto
+
+        // 🗑️ Deletar um produto
         Route::delete('{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     });
 });
+
 
 
 

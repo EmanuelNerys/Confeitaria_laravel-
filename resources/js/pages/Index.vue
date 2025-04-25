@@ -1,6 +1,6 @@
 <template>
   <div class="p-6">
-    <h1 class="text-2xl font-semibold mb-4">Produtos das Confeitarias</h1>
+    <h1 class="text-2xl font-semibold mb-4">Lista das Confeitarias</h1>
 
     <!-- Exibe mensagem de sucesso -->
     <div v-if="flashSuccess" class="alert alert-success bg-green-100 text-green-800 border border-green-400 rounded-lg p-4 mb-4">
@@ -73,19 +73,23 @@ import { ref, watch } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { Inertia } from '@inertiajs/inertia'
 
-const { bakeries, flash } = usePage().props
+// Garantir que as variáveis sejam inicializadas corretamente
+const { bakeries = [], flash, recentProducts = [] } = usePage().props
 
 const flashSuccess = ref(flash?.success || '')
 const flashError = ref(flash?.error || '')
 
+// Função para obter a URL da imagem do produto
 function getProductImageUrl(image) {
   return image ? `/storage/products/${image}` : '/default-product-image.jpg'
 }
 
+// Função para editar um produto
 function editProduct(id) {
   Inertia.visit(`/products/${id}/edit`)
 }
 
+// Função para excluir um produto
 function deleteProduct(id) {
   if (confirm('Tem certeza que deseja excluir este produto?')) {
     Inertia.delete(`/products/${id}`, {

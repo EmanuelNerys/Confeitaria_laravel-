@@ -11,10 +11,15 @@ class BakeryController extends Controller
     // Método para listar todas as confeitarias com seus produtos relacionados
     public function index()
     {
-        return Inertia::render('Index', [
-            'bakeries' => Bakery::with('products')->get(),
+        // Carregar as confeitarias com seus produtos
+        $bakeries = Bakery::with('products')->get();
+    
+        // Passar o resultado correto para o Inertia
+        return Inertia::render('ListaConfeitaria', [
+            'bakeries' => $bakeries, // Passando a variável correta
         ]);
     }
+    
 
     // Método para exibir o formulário de criação de uma nova confeitaria
     public function create()
@@ -28,13 +33,9 @@ class BakeryController extends Controller
         // Validação dos dados
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:20',
-            'street' => 'required|string|max:255',
+            'description' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
             'number' => 'required|string|max:10',
-            'neighborhood' => 'required|string|max:100',
-            'city' => 'required|string|max:100',
-            'state' => 'required|string|max:50',
-            'phone' => 'nullable|string|max:20',
             'latitude' => 'nullable|string|max:100',
             'longitude' => 'nullable|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -55,10 +56,8 @@ class BakeryController extends Controller
         // Cria a confeitaria
         Bakery::create($data);
     
-        // Redireciona com sucesso
-        return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria cadastrada com sucesso!']);
+        return response()->json(['success' => true]);
     }
-    
 
     // Método para exibir o formulário de edição
     public function edit($id)
@@ -75,7 +74,6 @@ class BakeryController extends Controller
         $bakery = Bakery::findOrFail($id);
         return Inertia::render('Show', [
             'bakery' => $bakery,
-            
         ]);
     }
 
@@ -87,7 +85,7 @@ class BakeryController extends Controller
             'name' => 'required|string|max:255',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'postal_code' => 'required|string|max:10', // Corrigido para "postal_code"
+            'postal_code' => 'required|string|max:10',
             'street' => 'required|string|max:255',
             'number' => 'required|string|max:10',
             'neighborhood' => 'required|string|max:255',
@@ -114,9 +112,8 @@ class BakeryController extends Controller
             $bakery->save();
         }
     
-        return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria atualizada com sucesso!']);
+        return response()->json(['message' => 'Cadastrado com sucesso']);
     }
-    
 
     // Método para excluir uma confeitaria
     public function destroy(Bakery $bakery)
@@ -132,7 +129,6 @@ class BakeryController extends Controller
         // Exclui a confeitaria do banco de dados
         $bakery->delete();
 
-        // Redireciona para a listagem com uma mensagem de sucesso
         return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria excluída com sucesso!']);
     }
 }

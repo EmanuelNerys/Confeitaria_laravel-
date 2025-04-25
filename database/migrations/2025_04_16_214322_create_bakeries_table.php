@@ -9,20 +9,13 @@ return new class extends Migration {
     {
         Schema::create('bakeries', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->decimal('latitude', 10, 7);  // 7 casas decimais para maior precisão
-            $table->decimal('longitude', 10, 7); // 7 casas decimais para maior precisão
-            $table->string('cep', 10); // Aumentando a largura para CEP com hífen
-            $table->string('street');
-            $table->string('number');
-            $table->string('neighborhood');
-            $table->string('city');
-            $table->string('state');
-            $table->string('phone', 15); // Limite de 15 caracteres para o telefone
+            $table->string('name'); // atualizado de 'nome' para 'name'
+            $table->string('description', 20); // novo campo, conforme o formulário
+            $table->string('address'); // novo campo, substituindo 'street'
+            $table->string('latitude', 100)->nullable();
+            $table->string('longitude', 100)->nullable();
+            $table->string('image')->nullable(); // campo adicionado para suportar upload de imagem
             $table->timestamps();
-
-            // Adicionando um índice para o CEP (facilita a busca por CEP)
-            $table->index('cep');
         });
     }
 

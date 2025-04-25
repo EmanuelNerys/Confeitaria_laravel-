@@ -63,23 +63,30 @@
 
 <script setup>
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/inertia'
 
 const { flash } = usePage().props
 
 const form = useForm({
   name: '',
-  description: '',
+  postal_code: '',
   address: '',
+  number: '',
   latitude: '',
   longitude: '',
-  created_at: '',
-  created_at: '',
+  image: null,
+  // campos auto preenchidos opcionalmente pelo CEP
+  street: '',
+  neighborhood: '',
+  city: '',
+  state: ''
 })
 
 const fields = [
   { id: 'name', label: 'Nome', placeholder: 'Nome da Confeitaria', type: 'text' },
-  { id: 'description', label: 'CEP', placeholder: 'CEP', type: 'text' },
+  { id: 'postal_code', label: 'CEP', placeholder: 'CEP', type: 'text' },
   { id: 'address', label: 'Endereço', placeholder: 'Rua', type: 'text' },
+  { id: 'number', label: 'Número', placeholder: 'Número', type: 'text' },
   { id: 'latitude', label: 'Latitude', placeholder: 'Latitude', type: 'text' },
   { id: 'longitude', label: 'Longitude', placeholder: 'Longitude', type: 'text' },
 ]
@@ -91,22 +98,13 @@ function handleImage(event) {
 function submit() {
   console.log('🔄 Enviando dados:', form.data())
 
-  // Criando um novo FormData para enviar o arquivo de imagem corretamente
-  const data = new FormData()
-  Object.entries(form.data()).forEach(([key, value]) => {
-    if (value !== null && value !== '') {
-      data.append(key, value)
-    }
-  })
-
-  // Envia os dados via POST para a rota de criação
   form.post('/bakeries', {
-    data,
-    forceFormData: true, // Garante que os dados sejam enviados como FormData
+    forceFormData: true,
     onSuccess: () => {
       console.log('✅ Confeitaria cadastrada com sucesso!')
       alert('✅ Confeitaria cadastrada com sucesso!')
       form.reset()
+      router.visit('/bakeries')
     },
     onError: () => {
       console.error('❌ Erro ao cadastrar confeitaria:', form.errors)
@@ -128,7 +126,7 @@ async function buscarCep() {
     if (!response.ok) throw new Error('CEP não encontrado')
     const data = await response.json()
 
-    form.street = data.logradouro || ''
+    form.address = data.logradouro || ''
     form.neighborhood = data.bairro || ''
     form.city = data.localidade || ''
     form.state = data.uf || ''
