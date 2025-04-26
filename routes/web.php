@@ -28,7 +28,7 @@ Route::get('/dashboard', function () {
 // Página HOME
 Route::get('/home', function () {
     return Inertia::render('Home', [
-        'bakeries' => Bakery::latest()->take(6)->get(),
+        'bakeries' => Bakery::latest()->take(6)->whereIsActive(true)->get(),
         'recentProducts' => Product::latest()->take(6)->get()->map(function ($product) {
             return [
                 'id' => $product->id,
@@ -47,23 +47,23 @@ Route::prefix('bakeries')->group(function () {
     // 🧁 Listar todas as confeitarias
    // Route::get('/', [BakeryController::class, 'index'])->name('bakeries.index');
 
-   Route::get('/listaconfeitaria', function () {
-    return Inertia::render('ListaConfeitaria', [
-        'bakeries' => Bakery::with('products')->latest()->take(6)->get(),
-        'recentProducts' => Product::latest()->take(6)->get()->map(function ($product) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'formatted_price' => $product->formatted_price, // Certifique-se de que existe no Product
-                'image' => $product->image ? asset('storage/products/' . $product->image) : null,
-            ];
-        }),
-        'flash' => [
-            'success' => session('success'),
-            'error' => session('error'),
-        ],
-    ]);
-})->name('bakeries.index');
+//    Route::get('/listaconfeitaria', function () {
+//     return Inertia::render('ListaConfeitaria', [
+//         'bakeries' => Bakery::with('products')->latest()->take(6)->get(),
+//         'recentProducts' => Product::latest()->take(6)->get()->map(function ($product) {
+//             return [
+//                 'id' => $product->id,
+//                 'name' => $product->name,
+//                 'formatted_price' => $product->formatted_price, // Certifique-se de que existe no Product
+//                 'image' => $product->image ? asset('storage/products/' . $product->image) : null,
+//             ];
+//         }),
+//         'flash' => [
+//             'success' => session('success'),
+//             'error' => session('error'),
+//         ],
+//     ]);
+// })->name('bakeries.index');
 
 // 🆕 Exibir formulário de criação de confeitaria
     Route::get('/create', [BakeryController::class, 'create'])->name('bakeries.create');
@@ -75,13 +75,16 @@ Route::prefix('bakeries')->group(function () {
     Route::get('{bakery}/edit', [BakeryController::class, 'edit'])->name('bakeries.edit');
     
     // 🔁 Atualizar dados de uma confeitaria
-    Route::put('{bakery}', [BakeryController::class, 'update'])->name('bakeries.update');
+    // Route::put('{bakery}', [BakeryController::class, 'update'])->name('bakeries.update');
     
     // 🗑️ Deletar uma confeitaria
     Route::delete('{bakery}', [BakeryController::class, 'destroy'])->name('bakeries.destroy');
     
     // 👁️ Ver detalhes de uma confeitaria
     Route::get('{bakery}/show', [BakeryController::class, 'show'])->name('bakeries.show');
+
+    // rota para inativar a confeitaria
+    Route::put('{bakery}/desativar', [BakeryController::class, 'deactivate'])->name('bakeries.desativar');
 
     // 📦 Listar produtos de uma confeitaria específica
     Route::get('/{id}/products', [ProductController::class, 'show'])->name('bakeries.products.show');

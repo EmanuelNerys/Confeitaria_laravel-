@@ -11,21 +11,25 @@ class BakeryController extends Controller
     // Método para listar todas as confeitarias com seus produtos relacionados
     public function index()
     {
-        // Carregar as confeitarias com seus produtos
-        $bakeries = Bakery::with('products')->get();
-    
-        // Passar o resultado correto para o Inertia
-        return Inertia::render('ListaConfeitaria', [
-            'bakeries' => $bakeries, // Passando a variável correta
+        $bakeries = Bakery::all();
+
+        $recentProducts = Product::latest()
+            ->take(8)
+            ->get(['id', 'name', 'price', 'image']);
+
+        return Inertia::render('Home', [
+            'bakeries' => $bakeries,
+            'recentProducts' => $recentProducts,
         ]);
     }
+
     
 
     // Método para exibir o formulário de criação de uma nova confeitaria
-    public function create()
-    {
+     public function create()
+     {
         return Inertia::render('Create'); // Aqui você retorna a view "Create", onde o formulário estará
-    }
+     }
 
     // Método para salvar uma nova confeitaria
     public function store(Request $request)
@@ -117,17 +121,32 @@ class BakeryController extends Controller
     // Método para excluir uma confeitaria
     public function destroy(Bakery $bakery)
     {
-        // Exclui a imagem, se existir
+        // Exclui os produtos associados à confeitaria
+        $bakery->products()->delete();
+    
+        // Exclui a imagem da confeitaria, se existir
         if ($bakery->image) {
             $imagePath = public_path('storage/' . $bakery->image);
             if (file_exists($imagePath)) {
                 \Storage::disk('public')->delete($bakery->image);
             }
         }
-
+    
         // Exclui a confeitaria do banco de dados
         $bakery->delete();
-
-        return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria excluída com sucesso!']);
+    
+        return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria e seus produtos excluídos com sucesso!']);
     }
-}
+    public function deactivate($id)
+    {
+        $bakery = Bakery::findOrFail($id);
+        
+        if ($bakery->active === true) {
+            $bakery->active = false;
+            $bakery->save();
+            
+
+                return redirect()->route('home')->with('flash', ['success' => 'Confeitaria desativada com sucesso!']);
+    } 
+}  
+}  

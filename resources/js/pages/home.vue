@@ -45,8 +45,9 @@
           />
           <div class="p-5">
             <h3 class="text-lg font-semibold text-gray-800">{{ product.name }}</h3>
-            <p v-if="product.price" class="text-blue-600 font-bold mt-2 text-lg">
-              R$ {{ parseFloat(product.price).toFixed(2) }}
+            <p v-if="product.price !== null && product.price !== undefined && product.price !== ''"
+               class="text-blue-600 font-bold mt-2 text-lg">
+              R$ {{ Number(product.price).toFixed(2) }}
             </p>
             <p v-else class="text-gray-400 italic">Preço não informado</p>
           </div>
@@ -57,8 +58,8 @@
     <!-- Botões de Cadastro e Edição -->
     <div class="text-center mt-12 flex justify-center space-x-4">
       <Link
-        href="/bakeries/create"
-        class="inline-block bg-blue-600 text-white text-lg font-medium py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300"
+        href="bakeries/create"
+        class="inline-block bg-green-600 text-white text-lg font-medium py-3 px-6 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300"
       >
         ➕ Cadastrar uma Confeitaria
       </Link>
@@ -75,10 +76,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
 
 defineProps({
   bakeries: Array,
   recentProducts: Array,
-});
+})
 </script>

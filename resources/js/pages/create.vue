@@ -72,6 +72,10 @@ const form = useForm({
   description: '',
   postal_code: '',
   address: '',
+  neighborhood: '',
+  city: '',
+  state: '',
+  number: '',
   latitude: '',
   longitude: '',
   image: null,
@@ -85,7 +89,7 @@ const fields = [
   { id: 'neighborhood', label: 'Bairro', placeholder: 'Bairro', type: 'text' },
   { id: 'city', label: 'Cidade', placeholder: 'Cidade', type: 'text' },
   { id: 'state', label: 'Estado', placeholder: 'Estado', type: 'text' },
-  {id:'number', label: 'Número', placeholder: 'Número', type: 'text'},
+  { id: 'number', label: 'Número', placeholder: 'Número', type: 'text' },
   { id: 'latitude', label: 'Latitude', placeholder: 'Latitude', type: 'text' },
   { id: 'longitude', label: 'Longitude', placeholder: 'Longitude', type: 'text' },
 ]
@@ -95,6 +99,16 @@ function handleImage(event) {
 }
 
 function submit() {
+  // Verifica se os campos obrigatórios estão preenchidos
+  const requiredFields = ['name', 'description', 'postal_code', 'address', 'neighborhood', 'city', 'state', 'number', 'latitude', 'longitude']
+  const emptyFields = requiredFields.filter(field => !form[field])
+
+  if (emptyFields.length > 0) {
+    alert('⚠️ Preencha todos os campos obrigatórios antes de enviar.')
+    return
+  }
+
+ 
   console.log('🔄 Enviando dados:', form.data())
 
   form.post('/bakeries/store', {
@@ -103,7 +117,7 @@ function submit() {
       console.log('✅ Confeitaria cadastrada com sucesso!')
       alert('✅ Confeitaria cadastrada com sucesso!')
       form.reset()
-      router.visit('/bakeries')
+      router.visit('/home')
     },
     onError: () => {
       console.error('❌ Erro ao cadastrar confeitaria:', form.errors)

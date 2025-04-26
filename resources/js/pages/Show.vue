@@ -6,6 +6,17 @@
       <span v-else class="text-gray-500 text-base block mt-2">Carregando informações da confeitaria...</span>
     </h1>
 
+    <!-- Botão de Desativar Confeitaria -->
+    <div class="mt-6 text-center">
+      <button
+        v-if="bakery?.id"
+        @click="deactivateBakery(bakery.id)"
+        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition-all"
+      >
+        <i class="fa-solid fa-trash"></i> Desativar Confeitaria
+      </button>
+    </div>
+
     <!-- Produtos -->
     <div v-if="bakery.products?.length" class="space-y-8 mt-12">
       <div
@@ -56,8 +67,8 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { defineProps } from 'vue' // Importando defineProps corretamente
+import { router } from '@inertiajs/vue3' // Importando o router
 
 const props = defineProps({
   bakery: Object,
@@ -73,6 +84,19 @@ const deleteProduct = (id) => {
     router.delete(`/bakeries/products/${id}`)
   }
 }
+
+const deactivateBakery = (id) => {
+  console.log('Tentando desativar confeitaria com ID:', id); // Adicione esta linha para depurar
+  if (confirm('Tem certeza que deseja desativar esta confeitaria?')) {
+    router.put(route('bakeries.desativar', id), {}, {
+      onSuccess: () => {
+        console.log('Confeitaria desativada com sucesso!');
+        router.visit(route('home')); // Redireciona para a página inicial
+      },
+    })
+  }
+}
+
 </script>
 
 <style>
