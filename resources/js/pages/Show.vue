@@ -6,8 +6,15 @@
       <span v-else class="text-gray-500 text-base block mt-2">Carregando informações da confeitaria...</span>
     </h1>
 
-    <!-- Botão de Desativar Confeitaria -->
-    <div class="mt-6 text-center">
+    <!-- Botões: Cadastrar Produto e Desativar Confeitaria -->
+    <div class="mt-6 flex flex-col sm:flex-row justify-center gap-4 text-center">
+      <Link
+       href="products/create"
+        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm transition-all inline-flex items-center justify-center"
+      >
+        <i class="fa-solid fa-plus mr-2"></i> Cadastrar Produto
+      </Link>
+
       <button
         v-if="bakery?.id"
         @click="deactivateBakery(bakery.id)"
@@ -40,12 +47,11 @@
             >
               <i class="fa-solid fa-pen-to-square"></i> Editar
             </button>
-            <!-- Alteração no botão para desativar produto -->
             <button
-             @click="deactivateProduct(product.id)"
+              @click="deactivateProduct(product.id)"
               :disabled="!product.is_active" 
-       class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm transition-all"
->
+              class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm transition-all"
+            >
               <i class="fa-solid fa-ban"></i> Desativar
             </button>
           </div>
@@ -69,8 +75,8 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue' // Importando defineProps corretamente
-import { router } from '@inertiajs/vue3' // Importando o router
+import { defineProps } from 'vue'
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({
   bakery: Object,
@@ -83,13 +89,11 @@ const editProduct = (id) => {
 
 const deactivateProduct = (id) => {
   if (confirm('Tem certeza que deseja desativar este produto?')) {
-    // Alterando a URL para corresponder à tabela "produtos"
     router.put(`/produtos/${id}/desativar`, {}, {
       onSuccess: () => {
-        // Atualizar a lista de produtos sem recarregar a página
         const product = props.bakery.products.find((p) => p.id === id);
         if (product) {
-          product.is_active = false; // Atualiza o status do produto na interface
+          product.is_active = false;
         }
         console.log('Produto desativado com sucesso!');
       },
@@ -100,13 +104,12 @@ const deactivateProduct = (id) => {
   }
 };
 
-
 const deactivateBakery = (id) => {
   if (confirm('Tem certeza que deseja desativar esta confeitaria?')) {
     router.put(route('bakeries.desativar', id), {}, {
       onSuccess: () => {
         console.log('Confeitaria desativada com sucesso!');
-        router.visit(route('home')); // Redireciona para a página inicial
+        router.visit(route('home'));
       },
       onError: () => {
         console.log('Erro ao desativar a confeitaria');

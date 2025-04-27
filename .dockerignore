@@ -1,0 +1,29 @@
+# Ignorar o diretório public/storage (link simbólico que pode dar problema)
+public/storage
+
+# Ignorar dependências do Composer
+vendor/
+
+# Ignorar arquivos e pastas de IDEs (PHPStorm, VSCode, etc)
+.idea/
+.vscode/
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos de cache Laravel
+storage/*.key
+storage/*.log
+storage/framework/*
+storage/logs/*
+
+# Ignorar arquivos de ambiente
+.env
+.env.example
+
+# Ignorar node_modules se usar frontend (Vue, React, etc)
+node_modules/
+
+# Ignorar arquivos do sistema operacional
+.DS_Store
+Thumbs.db

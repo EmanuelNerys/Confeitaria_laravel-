@@ -14,24 +14,24 @@ const props = defineProps({
   bakeries: Array
 })
 
-// Corrigir ícones padrão do Leaflet
+
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'marker-icon-2x.png', // Ícone retina (alta definição)
-  iconUrl: 'marker-icon.png',          // Ícone normal
-  shadowUrl: 'marker-shadow.png',      // Sombra
+  iconRetinaUrl: 'marker-icon-2x.png', 
+  iconUrl: 'marker-icon.png',          
+  shadowUrl: 'marker-shadow.png',      
 })
 
 
 onMounted(() => {
-  // Inicializa o mapa com ponto inicial
+  
   const map = L.map('map').setView([-7.13580600, -34.89041900], 12)
   
-  // Camada de fundo OpenStreetMap
+  
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
   }).addTo(map)
 
-  // Adiciona marcadores para cada confeitaria
+  
   props.bakeries.forEach(bakery => {
     const imageUrl = bakery.image ? `/storage/${bakery.image}` : '/storage/bakeries/default.jpg'
     
@@ -55,7 +55,7 @@ onMounted(() => {
   height: 500px;
 }
 
-/* Deixa o pop-up com imagem melhor centralizado */
+
 .leaflet-popup-content {
   text-align: center;
 }

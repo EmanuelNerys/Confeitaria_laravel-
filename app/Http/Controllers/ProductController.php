@@ -43,12 +43,9 @@ class ProductController extends Controller
      * @param  Bakery  $bakery
      * @return \Inertia\Response
      */
-    public function create(Bakery $bakery)
+    public function create()
     {
-        return Inertia::render('ProductCreate', [
-            'bakery' => $bakery, 
-            'flash' => session('flash'), // Flash messages
-        ]);
+       return Inertia::render('Create'); // Aqui você retorna a view "Create", onde o formulário estará
     }
 
     /**
@@ -65,9 +62,11 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
+            'bakery_id' => 'required|exists: bakeries,id', // Verifica se a confeitaria existe
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validação da imagem
         ]);
 
+        
         try {
             // Criar um novo produto associado à confeitaria
             if ($request->hasFile('image')) {
@@ -82,7 +81,7 @@ class ProductController extends Controller
             session()->flash('flash.success', 'Produto criado com sucesso!');
 
             // Redirecionar para a página de produtos da confeitaria
-            return redirect()->route('products.index', $bakery);
+            return redirect()->route('home')->with('flash', ['success' => 'Confeitaria produt com sucesso!']);
         } catch (\Exception $e) {
             // Tratar qualquer erro inesperado
             session()->flash('flash.error', 'Erro ao criar produto: ' . $e->getMessage());

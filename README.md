@@ -5,10 +5,10 @@ Este projeto é um marketplace para confeitarias, onde os usuários podem cadast
 
 ## Tecnologias Utilizadas
 
-- **Backend**: Laravel
+- **Backend**: Laravel com docker
 - **Frontend**: Vue.js
 - **Ponte entre Backend e Frontend**: Inertia.js
-- **Banco de Dados**: PostgreSQL
+- **Banco de Dados**: PostgreSQL com docker
 - **Mapas**: Leaflet (OpenStreetMap)
 - **Armazenamento de Imagens**: Laravel Storage
 
