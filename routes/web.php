@@ -105,7 +105,12 @@ Route::prefix('bakeries')->group(function () {
         Route::put('{product}', [ProductController::class, 'update'])->name('products.update');
 
         // 🗑️ Deletar um produto
-        Route::delete('{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+        Route::put('produtos/{product}/desativar', [ProductController::class, 'deactivate'])->name('products.deactivate');
+
+
+
+
+
     });
 });
 

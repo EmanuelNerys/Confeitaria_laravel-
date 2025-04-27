@@ -163,26 +163,39 @@ class ProductController extends Controller
      * @param  Product  $product
      * @return \Inertia\Response
      */
-    public function destroy(Bakery $bakery, Product $product)
+    public function deactivate(Bakery $bakery, Product $product)
     {
         try {
-            // Garantir que o produto pertence à confeitaria
+            // Garantir que o produto pertence à mesma confeitaria
             if ($product->bakery_id !== $bakery->id) {
-                abort(404);
+                // Caso o produto não pertença à confeitaria, redireciona com erro
+                session()->flash('flash.error', 'Produto não encontrado na confeitaria.');
+                return redirect()->route('products.index', $bakery);
             }
-
-            // Excluindo o produto
-            $product->delete();
-
-            // Mensagem de sucesso
-            session()->flash('flash.success', 'Produto excluído com sucesso!');
-
+    
+            // Verificar se o produto já está desativado
+            if ($product->is_active) {
+                // Alterar o status do produto para inativo
+                $product->is_active = false;
+                $product->save();
+    
+                // Mensagem de sucesso
+                session()->flash('flash.success', 'Produto desativado com sucesso!');
+            } else {
+                // Caso o produto já esteja desativado
+                session()->flash('flash.info', 'Produto já está desativado.');
+            }
+    
             // Redirecionar para a página de produtos da confeitaria
             return redirect()->route('products.index', $bakery);
+    
         } catch (\Exception $e) {
             // Tratar erros inesperados
-            session()->flash('flash.error', 'Erro ao excluir produto: ' . $e->getMessage());
+            session()->flash('flash.error', 'Erro ao desativar produto: ' . $e->getMessage());
             return redirect()->route('products.index', $bakery);
         }
     }
-}
+}    
+    
+
+

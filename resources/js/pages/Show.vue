@@ -40,11 +40,13 @@
             >
               <i class="fa-solid fa-pen-to-square"></i> Editar
             </button>
+            <!-- Alteração no botão para desativar produto -->
             <button
-              @click="deleteProduct(product.id)"
-              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition-all"
-            >
-              <i class="fa-solid fa-trash"></i> Excluir
+             @click="deactivateProduct(product.id)"
+              :disabled="!product.is_active" 
+       class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm transition-all"
+>
+              <i class="fa-solid fa-ban"></i> Desativar
             </button>
           </div>
         </div>
@@ -79,24 +81,39 @@ const editProduct = (id) => {
   router.visit(`/bakeries/products/${id}/edit`)
 }
 
-const deleteProduct = (id) => {
-  if (confirm('Tem certeza que deseja excluir este produto?')) {
-    router.delete(`/bakeries/products/${id}`)
+const deactivateProduct = (id) => {
+  if (confirm('Tem certeza que deseja desativar este produto?')) {
+    // Alterando a URL para corresponder à tabela "produtos"
+    router.put(`/produtos/${id}/desativar`, {}, {
+      onSuccess: () => {
+        // Atualizar a lista de produtos sem recarregar a página
+        const product = props.bakery.products.find((p) => p.id === id);
+        if (product) {
+          product.is_active = false; // Atualiza o status do produto na interface
+        }
+        console.log('Produto desativado com sucesso!');
+      },
+      onError: () => {
+        console.log('Erro ao desativar o produto');
+      },
+    });
   }
-}
+};
+
 
 const deactivateBakery = (id) => {
-  console.log('Tentando desativar confeitaria com ID:', id); // Adicione esta linha para depurar
   if (confirm('Tem certeza que deseja desativar esta confeitaria?')) {
     router.put(route('bakeries.desativar', id), {}, {
       onSuccess: () => {
         console.log('Confeitaria desativada com sucesso!');
         router.visit(route('home')); // Redireciona para a página inicial
       },
+      onError: () => {
+        console.log('Erro ao desativar a confeitaria');
+      }
     })
   }
 }
-
 </script>
 
 <style>

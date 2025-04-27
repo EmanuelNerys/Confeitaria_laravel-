@@ -42,17 +42,17 @@ class BakeryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:20',
-            'address' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
             'latitude' => 'nullable|string|max:100',
             'longitude' => 'nullable|string|max:100',
-            'number' => 'required|string|max:10',
+            'number' => 'required|string|max:20',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'neighborhood' => 'required|string|max:255',
         ]);
-    
+        
         $data = $validated;
-    
+        
         // Se houver imagem, faz upload
         if ($request->hasFile('image')) {
             if (!$request->file('image')->isValid()) {
@@ -62,11 +62,12 @@ class BakeryController extends Controller
             $imagePath = $request->file('image')->store('bakeries', 'public');
             $data['image'] = $imagePath;
         }
-    
+        
         // Cria a confeitaria
         Bakery::create($data);
-    
-        return response()->json(['success' => true]);
+        
+        // Redireciona após a criação
+        return redirect()->route('home')->with('flash', ['success' => 'Confeitaria cadastrada com sucesso!']);
     }
 
     // Método para exibir o formulário de edição
@@ -142,15 +143,25 @@ class BakeryController extends Controller
         return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria e seus produtos excluídos com sucesso!']);
     }
     public function deactivate($id)
-    {
-        $bakery = Bakery::findOrFail($id);
-        
-        if ($bakery->active === true) {
-            $bakery->active = false;
-            $bakery->save();
-            
+{
+    try {
+        $bakery = Bakery::findOrFail($id); // Busca a confeitaria com base no ID
 
-                return redirect()->route('home')->with('flash', ['success' => 'Confeitaria desativada com sucesso!']);
-    } 
-}  
+        // Verifica se a confeitaria está ativa
+        if ($bakery->active) {
+            $bakery->active = false; // Marca como inativa
+            $bakery->save(); // Salva as alterações
+
+            // Mensagem de sucesso
+            return redirect()->route('home')->with('flash.success', 'Confeitaria desativada com sucesso!');
+        }
+
+        // Caso a confeitaria já esteja inativa
+        return redirect()->route('home')->with('flash.info', 'A confeitaria já está desativada.');
+        
+    } catch (\Exception $e) {
+        // Se ocorrer algum erro durante o processo
+        return redirect()->route('home')->with('flash.error', 'Erro ao desativar a confeitaria: ' . $e->getMessage());
+    }
+} 
 }  
