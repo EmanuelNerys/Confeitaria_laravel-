@@ -11,12 +11,16 @@ class BakeryController extends Controller
     // Método para listar todas as confeitarias com seus produtos relacionados
     public function index()
     {
-        $bakeries = Bakery::all();
-
+        $bakeries = Bakery::all()->map(function ($bakery) {
+            // Garantir que o caminho da imagem esteja correto
+            $bakery->image = $bakery->image ? asset('storage/bakeries/' . $bakery->image) : asset('storage/bakeries/Bakery1.jpg');
+            return $bakery;
+        });
+    
         $recentProducts = Product::latest()
             ->take(8)
             ->get(['id', 'name', 'price', 'image']);
-
+    
         return Inertia::render('Home', [
             'bakeries' => $bakeries,
             'recentProducts' => $recentProducts,

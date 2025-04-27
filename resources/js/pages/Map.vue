@@ -1,43 +1,62 @@
 <template>
-    <div>
-      <h1 class="text-2xl font-bold mb-4">Mapa de Confeitarias</h1>
-      <div id="map" style="height: 500px;"></div>
-    </div>
-  </template>
+  <div>
+   
+    <div id="map" style="height: 500px;"></div>
+  </div>
+</template>
+
+<script setup>
+import { onMounted } from 'vue'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+
+const props = defineProps({
+  bakeries: Array
+})
+
+// Corrigir ícones padrão do Leaflet
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'marker-icon-2x.png', // Ícone retina (alta definição)
+  iconUrl: 'marker-icon.png',          // Ícone normal
+  shadowUrl: 'marker-shadow.png',      // Sombra
+})
+
+
+onMounted(() => {
+  // Inicializa o mapa com ponto inicial
+  const map = L.map('map').setView([-7.13580600, -34.89041900], 12)
   
-  <script setup>
-  import { onMounted } from 'vue'
-  import L from 'leaflet'
-  import 'leaflet/dist/leaflet.css'
-  
-  const props = defineProps({
-    bakeries: Array
+  // Camada de fundo OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+  }).addTo(map)
+
+  // Adiciona marcadores para cada confeitaria
+  props.bakeries.forEach(bakery => {
+    const imageUrl = bakery.image ? `/storage/${bakery.image}` : '/storage/bakeries/default.jpg'
+    
+    const marker = L.marker([bakery.latitude, bakery.longitude]).addTo(map)
+    
+    marker.bindPopup(`
+      <div style="text-align: center;">
+        <strong>${bakery.name}</strong><br>
+        <img src="${imageUrl}" style="width: 100px; height: auto; margin-top: 5px;"><br>
+        <a href="/bakeries/${bakery.id}/show" style="color: #007BFF;">Ver detalhes</a><br>
+        <small>Latitude: ${bakery.latitude} | Longitude: ${bakery.longitude}</small>
+      </div>
+    `)
   })
-  
-  // Corrigir ícones padrão do Leaflet
-  delete L.Icon.Default.prototype._getIconUrl
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-    iconUrl: require('leaflet/dist/images/marker-icon.png'),
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-  })
-  
-  onMounted(() => {
-    const map = L.map('map').setView([-23.5505, -46.6333], 12)
-  
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-    }).addTo(map)
-  
-    props.bakeries.forEach(bakery => {
-      const imageUrl = `/storage/${bakery.image}`
-      const marker = L.marker([bakery.latitude, bakery.longitude]).addTo(map)
-      marker.bindPopup(`
-        <strong>${bakery.nome}</strong><br>
-        <img src="${imageUrl}" style="width: 100px; margin-top: 5px;"><br>
-        <a href="/bakeries/${bakery.id}/edit">Ver detalhes</a>
-      `)
-    })
-  })
-  </script>
-  
+})
+</script>
+
+<style scoped>
+#map {
+  width: 100%;
+  height: 500px;
+}
+
+/* Deixa o pop-up com imagem melhor centralizado */
+.leaflet-popup-content {
+  text-align: center;
+}
+</style>
