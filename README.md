@@ -2,6 +2,9 @@
 
 Este projeto é um marketplace para confeitarias, onde os usuários podem cadastrar, editar, excluir e consultar confeitarias, bem como visualizar os produtos associados a cada uma. O sistema também exibe as confeitarias em um mapa interativo, permitindo que os usuários visualizem informações sobre as confeitarias ao clicar nos marcadores.
 
+## Acesso do projeto
+http://localhost:8000/home
+
 
 ## Tecnologias Utilizadas
 
