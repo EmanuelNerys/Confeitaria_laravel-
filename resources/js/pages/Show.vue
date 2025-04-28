@@ -76,7 +76,7 @@
 
 <script setup>
 import { defineProps } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3' // <- IMPORTA O ROUTER AQUI
 
 const props = defineProps({
   bakery: Object,
@@ -89,7 +89,7 @@ const editProduct = (id) => {
 
 const deactivateProduct = (id) => {
   if (confirm('Tem certeza que deseja desativar este produto?')) {
-    router.put(`/produtos/${id}/desativar`, {}, {
+    router.put(`/products/${id}/deactivate`, {}, {
       onSuccess: () => {
         const product = props.bakery.products.find((p) => p.id === id);
         if (product) {
@@ -104,12 +104,13 @@ const deactivateProduct = (id) => {
   }
 };
 
+
 const deactivateBakery = (id) => {
   if (confirm('Tem certeza que deseja desativar esta confeitaria?')) {
-    router.put(route('bakeries.desativar', id), {}, {
+    router.delete(`/bakeries/${id}`, {
       onSuccess: () => {
         console.log('Confeitaria desativada com sucesso!');
-        router.visit(route('home'));
+        router.visit('/'); // redireciona pra home depois de excluir
       },
       onError: () => {
         console.log('Erro ao desativar a confeitaria');

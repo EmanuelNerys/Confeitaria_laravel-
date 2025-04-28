@@ -140,28 +140,27 @@ class BakeryController extends Controller
         // Exclui a confeitaria do banco de dados
         $bakery->delete();
     
-        return redirect()->route('bakeries.index')->with('flash', ['success' => 'Confeitaria e seus produtos excluídos com sucesso!']);
+        return redirect()->route('/home')->with('flash', ['success' => 'Confeitaria e seus produtos excluídos com sucesso!']);
     }
-    public function deactivate($id)
-{
-    try {
-        $bakery = Bakery::findOrFail($id); // Busca a confeitaria com base no ID
-
-        // Verifica se a confeitaria está ativa
-        if ($bakery->active) {
-            $bakery->active = false; // Marca como inativa
-            $bakery->save(); // Salva as alterações
-
-            // Mensagem de sucesso
-            return redirect()->route('home')->with('flash.success', 'Confeitaria desativada com sucesso!');
+   
+    public function deactivate(Bakery $bakery)
+    {
+        try {
+            // Verifica se a confeitaria está ativa
+            if ($bakery->active) {
+                $bakery->active = false; // Marca como inativa
+                $bakery->save(); // Salva as alterações
+    
+                // Mensagem de sucesso
+                return redirect()->route('home')->with('flash', ['success' => 'Confeitaria desativada com sucesso!']);
+            }
+    
+            // Caso a confeitaria já esteja inativa
+            return redirect()->route('home')->with('flash', ['info' => 'A confeitaria já está desativada.']);
+            
+        } catch (\Exception $e) {
+            // Se ocorrer algum erro durante o processo
+            return redirect()->route('home')->with('flash', ['error' => 'Erro ao desativar a confeitaria: ' . $e->getMessage()]);
         }
-
-        // Caso a confeitaria já esteja inativa
-        return redirect()->route('home')->with('flash.info', 'A confeitaria já está desativada.');
-        
-    } catch (\Exception $e) {
-        // Se ocorrer algum erro durante o processo
-        return redirect()->route('home')->with('flash.error', 'Erro ao desativar a confeitaria: ' . $e->getMessage());
     }
-} 
-}  
+}

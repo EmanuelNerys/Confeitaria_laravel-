@@ -70,23 +70,23 @@ Route::prefix('bakeries')->group(function () {
     Route::get('/{id}/products', [ProductController::class, 'show'])->name('bakeries.products.show');
     
     // Subgrupo de rotas para PRODUTOS
-    Route::prefix('/products')->group(function () {
+   // Subgrupo de rotas para PRODUTOS
+Route::prefix('products')->group(function () {
 
-        
-        //  Exibir formulário de criação de produto
-        Route::get('/create', [ProductController::class, 'create'])->name('products.create');
+    // Exibir formulário de criação de produto
+    Route::get('/create', [ProductController::class, 'create'])->name('products.create');
 
-        //  Armazenar novo produto
-        Route::post('/store', [ProductController::class, 'store'])->name('products.store');
+    // Armazenar novo produto
+    Route::post('/store', [ProductController::class, 'store'])->name('products.store');
 
-        //  Exibir formulário de edição de produto
-        Route::get('{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    // Exibir formulário de edição de produto
+    Route::get('{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 
-        //  Atualizar um produto
-        Route::put('{product}', [ProductController::class, 'update'])->name('products.update');
+    // Atualizar um produto
+    Route::put('{product}', [ProductController::class, 'update'])->name('products.update');
 
-        //  Deletar um produto
-        Route::put('produtos/{product}/desativar', [ProductController::class, 'deactivate'])->name('products.deactivate');
+    // Desativar um produto
+    Route::put('{product}/deactivate', [ProductController::class, 'deactivate'])->name('products.deactivate');
 
 
 
